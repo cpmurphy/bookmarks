@@ -3,6 +3,8 @@ require "test_helper"
 class BookmarksControllerTest < ActionDispatch::IntegrationTest
   setup do
     @bookmark = bookmarks(:one)
+    @user = users(:one)
+    sign_in_as(@user)
   end
 
   test "should get index" do
