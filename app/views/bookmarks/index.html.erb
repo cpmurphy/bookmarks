@@ -1,31 +1,52 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Bookmarks" %>
 
-<h1>Bookmarks</h1>
+<% if notice %>
+  <div class="notice"><%= notice %></div>
+<% end %>
 
-<section id="bookmarks">
+<header class="page-header">
+  <h1>Bookmarks</h1>
+  <div class="actions">
+    <%= button_to "New bookmark", new_bookmark_path, method: :get, class: "button primary" %>
+  </div>
+</header>
+
+<main class="bookmarks-container">
   <% @bookmarks.each do |bookmark| %>
-    <div>
-    <div class="bookmark">
-      <a href="<%= bookmark.url %>">
-        <%= bookmark.title %>
-      </a>
-    </div>
-    <div>
-      <%= link_to "Edit", edit_bookmark_path(bookmark) %>
-    </div>
+    <article class="bookmark-card">
+      <div class="bookmark-content">
+        <h2 class="bookmark-title">
+          <a href="<%= bookmark.url %>" target="_blank" rel="noopener">
+            <%= bookmark.title %>
+          </a>
+        </h2>
+
+        <% if bookmark.description.present? %>
+          <p class="bookmark-description"><%= bookmark.description %></p>
+        <% end %>
+
+        <% if bookmark.tags.present? %>
+          <div class="bookmark-tags">
+            <% bookmark.tags.split(',').each do |tag| %>
+              <span class="tag"><%= tag.strip %></span>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="bookmark-actions">
+        <%= link_to "Edit", edit_bookmark_path(bookmark), class: "button" %>
+      </div>
+    </article>
   <% end %>
-</section>
+</main>
 
-<section id="navigation">
-  <%= button_to "New bookmark", new_bookmark_path, method: :get %>
-</section>
-
-<section id="import">
+<section class="import-section">
   <h2>Import Bookmarks</h2>
-  <%= form_tag import_bookmarks_path, multipart: true do %>
-    <%= file_field_tag :file %>
-    <%= submit_tag "Import JSON" %>
+  <%= form_tag import_bookmarks_path, multipart: true, class: "import-form" do %>
+    <div class="file-input-wrapper">
+      <%= file_field_tag :file, class: "file-input", accept: "application/json" %>
+      <%= submit_tag "Import JSON", class: "button" %>
+    </div>
   <% end %>
 </section>

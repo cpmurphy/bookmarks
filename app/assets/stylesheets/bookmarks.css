@@ -1,0 +1,166 @@
+/* Variables */
+:root {
+  --primary-color: #4a90e2;
+  --text-color: #2c3e50;
+  --background-color: #f5f7fa;
+  --card-background: #ffffff;
+  --border-color: #e1e8ed;
+  --tag-background: #edf2f7;
+  --spacing-unit: 1rem;
+}
+
+/* Base styles */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Layout */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-unit) var(--spacing-unit) calc(var(--spacing-unit) * 2);
+  margin-bottom: var(--spacing-unit);
+}
+
+.bookmarks-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-unit);
+  padding: var(--spacing-unit);
+}
+
+/* Cards */
+.bookmark-card {
+  background: var(--card-background);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: calc(var(--spacing-unit) * 1.5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-unit);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bookmark-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bookmark-content {
+  flex-grow: 1;
+}
+
+.bookmark-title {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem;
+}
+
+.bookmark-title a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.bookmark-title a:hover {
+  text-decoration: underline;
+}
+
+.bookmark-description {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+/* Tags */
+.bookmark-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.tag {
+  background: var(--tag-background);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  color: #4a5568;
+}
+
+/* Buttons and Actions */
+.button {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: white;
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button:hover {
+  background: #f8f9fa;
+  border-color: #cbd5e0;
+}
+
+.button.primary {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+}
+
+.button.primary:hover {
+  background: #357abd;
+}
+
+/* Import section */
+.import-section {
+  margin: calc(var(--spacing-unit) * 2) var(--spacing-unit);
+  padding: var(--spacing-unit);
+  background: var(--card-background);
+  border-radius: 8px;
+}
+
+.import-form {
+  margin-top: var(--spacing-unit);
+}
+
+.file-input-wrapper {
+  display: flex;
+  gap: var(--spacing-unit);
+  align-items: center;
+}
+
+/* Notices */
+.notice {
+  background: #48bb78;
+  color: white;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 6px;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .page-header {
+    flex-direction: column;
+    gap: var(--spacing-unit);
+    text-align: center;
+  }
+
+  .bookmarks-container {
+    grid-template-columns: 1fr;
+  }
+
+  .file-input-wrapper {
+    flex-direction: column;
+  }
+}
