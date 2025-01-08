@@ -57,6 +57,40 @@ class BookmarksController < ApplicationController
     end
   end
 
+  def import
+    if params[:file].present?
+      json_data = JSON.parse(params[:file].read)
+      imported = 0
+      skipped = 0
+
+      ActiveRecord::Base.transaction do
+        json_data.each do |item|
+          bookmark = Bookmark.find_or_initialize_by(url: item['href'])
+          if bookmark.new_record?
+            bookmark.update!(
+              title: item['description'],
+              description: item['extended'],
+              tags: item['tags'].presence || '',
+              created_at: Time.zone.parse(item['time'])
+            )
+            imported += 1
+          else
+            skipped += 1
+          end
+        end
+      end
+
+      redirect_to bookmarks_path,
+        notice: "Successfully imported #{imported} bookmarks. Skipped #{skipped} duplicates."
+    else
+      redirect_to bookmarks_path, alert: "Please select a file to import."
+    end
+  rescue JSON::ParserError
+    redirect_to bookmarks_path, alert: "Invalid JSON file format."
+  rescue => e
+    redirect_to bookmarks_path, alert: "Import failed: #{e.message}"
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_bookmark

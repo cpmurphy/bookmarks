@@ -21,3 +21,11 @@
 <section id="navigation">
   <%= button_to "New bookmark", new_bookmark_path, method: :get %>
 </section>
+
+<section id="import">
+  <h2>Import Bookmarks</h2>
+  <%= form_tag import_bookmarks_path, multipart: true do %>
+    <%= file_field_tag :file %>
+    <%= submit_tag "Import JSON" %>
+  <% end %>
+</section>

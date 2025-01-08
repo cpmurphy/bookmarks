@@ -16,13 +16,14 @@ end
 
 module SignInHelper
   def sign_in_as(user)
-    post session_path, params: { 
-      email_address: user.email_address, 
-      password: 'password' 
+    post session_path, params: {
+      email_address: user.email_address,
+      password: 'password'
     }
   end
 end
 
 class ActionDispatch::IntegrationTest
   include SignInHelper
+  include ActionDispatch::TestProcess
 end
