@@ -4,13 +4,20 @@
 
 <h1>Bookmarks</h1>
 
-<div id="bookmarks">
+<section id="bookmarks">
   <% @bookmarks.each do |bookmark| %>
-    <%= render bookmark %>
-    <p>
-      <%= link_to "Show this bookmark", bookmark %>
-    </p>
+    <div>
+    <div class="bookmark">
+      <a href="<%= bookmark.url %>">
+        <%= bookmark.title %>
+      </a>
+    </div>
+    <div>
+      <%= link_to "Edit", edit_bookmark_path(bookmark) %>
+    </div>
   <% end %>
-</div>
+</section>
 
-<%= link_to "New bookmark", new_bookmark_path %>
+<section id="navigation">
+  <%= button_to "New bookmark", new_bookmark_path, method: :get %>
+</section>
