@@ -15,6 +15,7 @@ SCRIPT_DIR=$(dirname "$0")
 # shellcheck source=deploy_env.sh
 . "${SCRIPT_DIR}"/../config/deploy_env.sh
 
+
 RAILS_MASTER_KEY=$(cat "${SCRIPT_DIR}"/../config/master.key)
 export RAILS_MASTER_KEY
 
@@ -30,6 +31,7 @@ docker save -o bookmarx.tar bookmarx
 
 bzip2 bookmarx.tar
 
+ssh "${DEPLOY_USER}"@"${DEPLOY_HOST}" "mkdir -p ${DEPLOY_DIR}"
 # upload the tar file to the server
 scp bookmarx.tar.bz2 "${DEPLOY_USER}"@"${DEPLOY_HOST}":"${DEPLOY_DIR}"/bookmarx.tar.bz2
 
@@ -39,6 +41,9 @@ ssh "${DEPLOY_USER}"@"${DEPLOY_HOST}" "RAILS_MASTER_KEY=$RAILS_MASTER_KEY" "DEPL
 set -e
 set -x
 cd "${DEPLOY_DIR}"
+mkdir -p storage
+mkdir -p tmp
+chown rails:rails storage tmp
 rm -f bookmarx.tar
 bunzip2 -f bookmarx.tar.bz2
 docker load -i bookmarx.tar
@@ -50,6 +55,8 @@ docker rm bookmarx || true
 docker run -d --name bookmarx -p 3001:3000 \
   -e RACK_ENV=production \
   -e RAILS_MASTER_KEY=$RAILS_MASTER_KEY \
+  -v "${DEPLOY_DIR}/storage:/rails/storage" \
+  -v "${DEPLOY_DIR}/tmp:/rails/tmp" \
  --log-driver json-file \
  --log-opt max-size=10m \
  --log-opt max-file=3 bookmarx
