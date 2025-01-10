@@ -1,24 +1,15 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a vanilla Rails application (yes, I know), so expect it to work
+like one of those.  It is currently pre-alpha, missing lots of features
+and not too smooth.
 
-Things you may want to cover:
+## Development
 
-* Ruby version
+To run unit tests, use `rake`.
 
-* System dependencies
+## Deployment
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+It doesn't use Kamal, instead there is bin/deploy.sh, which expects to find
+config/deploy-env.sh which defines environment variables on here to ssh
+and deploy.
