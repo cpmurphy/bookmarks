@@ -3,21 +3,55 @@ require "test_helper"
 class BookmarksControllerTest < ActionDispatch::IntegrationTest
   setup do
     @bookmark = bookmarks(:one)
+    @private_bookmark = bookmarks(:private)
     @user = users(:one)
-    sign_in_as(@user)
   end
 
-  test "should get index" do
+  test "should get index with public bookmarks when not signed in" do
     get bookmarks_url
+    assert_response :success
+    assert_includes @response.body, @bookmark.title
+    assert_not_includes @response.body, @private_bookmark.title
+  end
+
+  test "should get index with all bookmarks when signed in" do
+    sign_in_as(@user)
+    get bookmarks_url
+    assert_response :success
+    assert_includes @response.body, @bookmark.title
+    assert_includes @response.body, @private_bookmark.title
+  end
+
+  test "should show public bookmark when not signed in" do
+    get bookmark_url(@bookmark)
     assert_response :success
   end
 
-  test "should get new" do
+  test "should not show private bookmark when not signed in" do
+    get bookmark_url(@private_bookmark)
+    assert_redirected_to bookmarks_path
+    assert_equal "You must be signed in to view private bookmarks", flash[:alert]
+  end
+
+  test "should show private bookmark when signed in" do
+    sign_in_as(@user)
+    get bookmark_url(@private_bookmark)
+    assert_response :success
+  end
+
+  test "should get new when signed in" do
+    sign_in_as(@user)
     get new_bookmark_url
     assert_response :success
   end
 
-  test "should create bookmark" do
+  test "should not get new when not signed in" do
+    get new_bookmark_url
+    assert_redirected_to new_session_path
+  end
+
+  test "should create bookmark when signed in" do
+    sign_in_as(@user)
     assert_difference("Bookmark.count") do
       @bookmark.url = 'http://example.com/2'
       post bookmarks_url, params: { bookmark: { description: @bookmark.description, tags: @bookmark.tags, title: @bookmark.title, url: @bookmark.url } }
@@ -32,17 +66,20 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get edit" do
+    sign_in_as(@user)
     get edit_bookmark_url(@bookmark)
     assert_response :success
   end
 
   test "should update bookmark" do
+    sign_in_as(@user)
     @bookmark.url = 'http://example.com/3'
     patch bookmark_url(@bookmark), params: { bookmark: { description: @bookmark.description, tags: @bookmark.tags, title: @bookmark.title, url: @bookmark.url } }
     assert_redirected_to bookmark_url(@bookmark)
   end
 
-  test "should destroy bookmark" do
+  test "should destroy bookmark when signed in" do
+    sign_in_as(@user)
     assert_difference("Bookmark.count", -1) do
       delete bookmark_url(@bookmark)
     end
@@ -50,7 +87,8 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to bookmarks_url
   end
 
-  test "should import bookmarks from JSON file" do
+  test "should import bookmarks from JSON file when signed in" do
+    sign_in_as(@user)
     # Create a temp file with test JSON data
     file = Tempfile.new(['bookmarks', '.json'])
     file.write([{
@@ -78,7 +116,7 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
     assert_equal Time.zone.parse("2024-12-30T00:16:38Z"), bookmark.created_at
   end
 
-  test "should handle duplicate URLs during import" do
+  test "should handle duplicate URLs during import when signed in" do
     # First create a bookmark
     Bookmark.create!(
       url: "https://example.com",
@@ -94,6 +132,7 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
     }].to_json)
     file.rewind
 
+    sign_in_as(@user)
     assert_no_difference("Bookmark.count") do
       post import_bookmarks_path, params: { file: fixture_file_upload(file.path, 'application/json') }
     end
@@ -102,13 +141,15 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
     assert_match /Skipped 1 duplicate/, flash[:notice]
   end
 
-  test "should handle missing file parameter" do
+  test "should handle missing file parameter when signed in" do
+    sign_in_as(@user)
     post import_bookmarks_path
     assert_redirected_to bookmarks_path
     assert_equal "Please select a file to import.", flash[:alert]
   end
 
-  test "should handle invalid JSON file" do
+  test "should handle invalid JSON file when signed in" do
+    sign_in_as(@user)
     file = Tempfile.new(['bookmarks', '.json'])
     file.write("This is not JSON")
     file.rewind
@@ -119,7 +160,8 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Invalid JSON file format.", flash[:alert]
   end
 
-  test "should import multiple bookmarks" do
+  test "should import multiple bookmarks when signed in" do
+    sign_in_as(@user)
     file = Tempfile.new(['bookmarks', '.json'])
     file.write([
       {

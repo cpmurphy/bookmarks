@@ -34,9 +34,11 @@
         <% end %>
       </div>
 
-      <div class="bookmark-actions">
-        <%= link_to "Edit", edit_bookmark_path(bookmark), class: "button" %>
-      </div>
+      <% if authenticated? %>
+        <div class="bookmark-actions">
+          <%= link_to "Edit", edit_bookmark_path(bookmark), class: "button" %>
+        </div>
+      <% end %>
     </article>
   <% end %>
 </main>

@@ -1,13 +1,21 @@
 class BookmarksController < ApplicationController
+  allow_unauthenticated_access only: %i[ index show ]
   before_action :set_bookmark, only: %i[ show edit update destroy ]
 
   # GET /bookmarks or /bookmarks.json
   def index
-    @bookmarks = Bookmark.all
+    @bookmarks = if authenticated?
+      Bookmark.all
+    else
+      Bookmark.where(private: [false, nil])
+    end
   end
 
   # GET /bookmarks/1 or /bookmarks/1.json
   def show
+    unless authenticated? || !@bookmark.private?
+      redirect_to bookmarks_path, alert: "You must be signed in to view private bookmarks"
+    end
   end
 
   # GET /bookmarks/new
@@ -101,4 +109,5 @@ class BookmarksController < ApplicationController
     def bookmark_params
       params.expect(bookmark: [ :url, :title, :description, :tags ])
     end
+
 end
