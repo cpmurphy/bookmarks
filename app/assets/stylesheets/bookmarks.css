@@ -15,6 +15,8 @@ body {
   color: var(--text-color);
   line-height: 1.6;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  padding: 0;
+  margin: 0;
 }
 
 /* Layout */
@@ -22,15 +24,30 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-unit) var(--spacing-unit) calc(var(--spacing-unit) * 2);
+  padding: var(--spacing-unit);
   margin-bottom: var(--spacing-unit);
+  flex-wrap: wrap;
+  gap: var(--spacing-unit);
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .bookmarks-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
   gap: var(--spacing-unit);
   padding: var(--spacing-unit);
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 /* Cards */
@@ -43,6 +60,7 @@ body {
   flex-direction: column;
   gap: var(--spacing-unit);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 150px;
 }
 
 .bookmark-card:hover {
@@ -55,8 +73,9 @@ body {
 }
 
 .bookmark-title {
-  font-size: 1.25rem;
+  font-size: clamp(1.1rem, 2.5vw, 1.25rem);
   margin: 0 0 0.5rem;
+  word-break: break-word;
 }
 
 .bookmark-title a {
@@ -70,8 +89,9 @@ body {
 
 .bookmark-description {
   color: #666;
-  font-size: 0.9rem;
+  font-size: clamp(0.875rem, 2vw, 0.9rem);
   margin: 0.5rem 0;
+  word-break: break-word;
 }
 
 /* Tags */
@@ -79,15 +99,16 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 0.5rem;
+  margin-top: auto;
 }
 
 .tag {
   background: var(--tag-background);
   padding: 0.25rem 0.75rem;
   border-radius: 1rem;
-  font-size: 0.8rem;
+  font-size: clamp(0.75rem, 1.5vw, 0.8rem);
   color: #4a5568;
+  white-space: nowrap;
 }
 
 /* Buttons and Actions */
@@ -100,9 +121,10 @@ body {
   background: white;
   color: var(--text-color);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: clamp(0.875rem, 2vw, 0.9rem);
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .button:hover {
@@ -126,6 +148,9 @@ body {
   padding: var(--spacing-unit);
   background: var(--card-background);
   border-radius: 8px;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .import-form {
@@ -136,6 +161,7 @@ body {
   display: flex;
   gap: var(--spacing-unit);
   align-items: center;
+  flex-wrap: wrap;
 }
 
 /* Notices */
@@ -143,24 +169,74 @@ body {
   background: #48bb78;
   color: white;
   padding: 1rem;
-  margin: 1rem;
+  margin: 1rem auto;
   border-radius: 6px;
   text-align: center;
+  max-width: 1400px;
 }
 
 /* Responsive adjustments */
 @media (max-width: 640px) {
+  :root {
+    --spacing-unit: 0.75rem;
+  }
+
   .page-header {
-    flex-direction: column;
-    gap: var(--spacing-unit);
-    text-align: center;
+    padding: var(--spacing-unit);
   }
 
   .bookmarks-container {
-    grid-template-columns: 1fr;
+    padding: var(--spacing-unit);
+  }
+
+  .bookmark-card {
+    padding: var(--spacing-unit);
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .button {
+    padding: 0.5rem 0.75rem;
   }
 
   .file-input-wrapper {
     flex-direction: column;
+    width: 100%;
+  }
+
+  .file-input-wrapper input[type="file"] {
+    width: 100%;
+  }
+
+  .file-input-wrapper .button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #1a1a1a;
+    --card-background: #2d2d2d;
+    --text-color: #e0e0e0;
+    --border-color: #404040;
+    --tag-background: #404040;
+  }
+
+  .button {
+    background: var(--card-background);
+    color: var(--text-color);
+  }
+
+  .bookmark-description {
+    color: #b0b0b0;
+  }
+
+  .tag {
+    color: #d0d0d0;
   }
 }
