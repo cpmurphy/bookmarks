@@ -22,23 +22,6 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
     assert_includes @response.body, @private_bookmark.title
   end
 
-  test "should show public bookmark when not signed in" do
-    get bookmark_url(@bookmark)
-    assert_response :success
-  end
-
-  test "should not show private bookmark when not signed in" do
-    get bookmark_url(@private_bookmark)
-    assert_redirected_to bookmarks_path
-    assert_equal "You must be signed in to view private bookmarks", flash[:alert]
-  end
-
-  test "should show private bookmark when signed in" do
-    sign_in_as(@user)
-    get bookmark_url(@private_bookmark)
-    assert_response :success
-  end
-
   test "should get new when signed in" do
     sign_in_as(@user)
     get new_bookmark_url
@@ -57,12 +40,7 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
       post bookmarks_url, params: { bookmark: { description: @bookmark.description, tags: @bookmark.tags, title: @bookmark.title, url: @bookmark.url } }
     end
 
-    assert_redirected_to bookmark_url(Bookmark.last)
-  end
-
-  test "should show bookmark" do
-    get bookmark_url(@bookmark)
-    assert_response :success
+    assert_redirected_to bookmarks_path
   end
 
   test "should get edit" do
@@ -75,7 +53,7 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@user)
     @bookmark.url = 'http://example.com/3'
     patch bookmark_url(@bookmark), params: { bookmark: { description: @bookmark.description, tags: @bookmark.tags, title: @bookmark.title, url: @bookmark.url } }
-    assert_redirected_to bookmark_url(@bookmark)
+    assert_redirected_to bookmarks_path
   end
 
   test "should destroy bookmark when signed in" do
