@@ -43,7 +43,7 @@ class BookmarksTest < ApplicationSystemTestCase
     sign_in_as(@user)
     visit bookmarks_url
 
-    within("#bookmark_#{@bookmark.id}") do
+    within(find_bookmark_card("Example Site")) do
       click_on "Edit"
     end
 
@@ -54,16 +54,17 @@ class BookmarksTest < ApplicationSystemTestCase
     assert_text "Updated Title"
   end
 
-  test "should destroy bookmark when signed in" do
+  test "should delete bookmark when signed in" do
     sign_in_as(@user)
     visit bookmarks_url
     page.accept_confirm do
-      within("#bookmark_#{@bookmark.id}") do
+      within(find_bookmark_card("Example Site")) do
         click_on "Delete"
       end
     end
 
-    assert_text "Bookmark was successfully destroyed"
+    assert_text "Bookmark was successfully deleted"
+    assert_no_text "Example Site"
   end
 
   test "should not show edit/delete buttons when not signed in" do
@@ -76,5 +77,11 @@ class BookmarksTest < ApplicationSystemTestCase
   test "should redirect to sign in when trying to create bookmark" do
     visit new_bookmark_url
     assert_current_path new_session_path
+  end
+
+  private
+
+  def find_bookmark_card(title)
+    find("article.bookmark-card", text: title)
   end
 end

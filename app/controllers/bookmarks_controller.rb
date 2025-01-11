@@ -53,7 +53,7 @@ class BookmarksController < ApplicationController
     @bookmark.destroy!
 
     respond_to do |format|
-      format.html { redirect_to bookmarks_path, status: :see_other, notice: "Bookmark was successfully destroyed." }
+      format.html { redirect_to bookmarks_path, status: :see_other, notice: "Bookmark was successfully deleted." }
       format.json { head :no_content }
     end
   end
