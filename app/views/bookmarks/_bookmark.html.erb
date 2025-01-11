@@ -21,8 +21,12 @@
 
   <% if authenticated? %>
     <div class="bookmark-actions">
-      <%= link_to "Edit", edit_bookmark_path(bookmark), class: "button" %>
-      <%= button_to "Delete", bookmark_path(bookmark), method: :delete, class: "button", form: { data: { turbo_confirm: "Are you sure?" } } %>
+      <%= link_to "Edit", edit_bookmark_path(bookmark), class: "button", data: { turbo: false } %>
+      <%= button_to "Delete", bookmark_path(bookmark),
+            method: :delete,
+            class: "button",
+            form: { data: { turbo_confirm: "Are you sure?" } },
+            data: { turbo_frame: "_top" } %>
     </div>
   <% end %>
 </article>

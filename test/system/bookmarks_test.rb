@@ -79,6 +79,41 @@ class BookmarksTest < ApplicationSystemTestCase
     assert_current_path new_session_path
   end
 
+  test "can search bookmarks" do
+    visit bookmarks_url
+
+    fill_in "query", with: "Example"
+
+    assert_selector ".bookmark-card", text: "Example Site"
+    assert_no_selector ".bookmark-card", text: "Private Site"
+  end
+
+  test "shows no results message when search finds nothing" do
+    visit bookmarks_url
+
+    fill_in "query", with: "nonexistent"
+
+    assert_no_selector ".bookmark-card"
+    assert_text "No bookmarks found"
+  end
+
+  test "search respects privacy when not signed in" do
+    visit bookmarks_url
+
+    fill_in "query", with: "private"
+
+    assert_no_selector ".bookmark-card", text: "Private Site"
+  end
+
+  test "search shows private bookmarks when signed in" do
+    sign_in_as(@user)
+    visit bookmarks_url
+
+    fill_in "query", with: "private"
+
+    assert_selector ".bookmark-card", text: "Private Site"
+  end
+
   private
 
   def find_bookmark_card(title)

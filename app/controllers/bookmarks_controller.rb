@@ -5,10 +5,12 @@ class BookmarksController < ApplicationController
   # GET /bookmarks or /bookmarks.json
   def index
     @bookmarks = if authenticated?
-      Bookmark.all
+      base_scope = Bookmark.all
     else
-      Bookmark.where(private: [ false, nil ])
+      base_scope = Bookmark.where(private: [ false, nil ])
     end
+
+    @bookmarks = base_scope.search(params[:query]) if params[:query].present?
   end
 
   # GET /bookmarks/new

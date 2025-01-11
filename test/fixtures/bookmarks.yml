@@ -4,10 +4,12 @@ one:
   url: http://example.com
   title: Example Site
   description: A public bookmark
+  tags: tag1, tag2
   private: false
 
 private:
   url: http://private.example.com
   title: Private Site
   description: A private bookmark
+  tags: tag3, tag4
   private: true

@@ -1,0 +1,46 @@
+.flash-messages {
+  position: fixed;
+  top: var(--spacing-unit);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: 90%;
+  max-width: 600px;
+}
+
+.flash {
+  margin-bottom: var(--spacing-unit);
+  padding: 1rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: slide-down 0.3s ease-out;
+}
+
+.flash-notice {
+  background-color: #48BB78;
+  color: white;
+}
+
+.flash-alert {
+  background-color: #F56565;
+  color: white;
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .flash {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+} 

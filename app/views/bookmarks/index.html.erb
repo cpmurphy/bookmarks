@@ -6,6 +6,15 @@
 
 <header class="page-header">
   <h1>Bookmarks</h1>
+
+  <%= form_with url: bookmarks_path, method: :get, data: { turbo_frame: "bookmarks", turbo_action: "advance" }, class: "search-form" do |form| %>
+    <%= form.search_field :query,
+        value: params[:query],
+        placeholder: "Search bookmarks...",
+        class: "search-input",
+        data: { controller: "search", action: "input->search#submit" } %>
+  <% end %>
+
   <div class="actions">
     <% if authenticated? %>
       <%= button_to "New bookmark", new_bookmark_path, method: :get, class: "button primary" %>
@@ -16,11 +25,15 @@
   </div>
 </header>
 
-<main class="bookmarks-container">
-  <% @bookmarks.each do |bookmark| %>
-    <%= render bookmark %>
-  <% end %>
-</main>
+<%= turbo_frame_tag "bookmarks" do %>
+  <div class="bookmarks-container">
+    <% if @bookmarks.any? %>
+      <%= render @bookmarks %>
+    <% else %>
+      <p class="no-results">No bookmarks found</p>
+    <% end %>
+  </div>
+<% end %>
 
 <% if authenticated? %>
   <section class="import-section">
