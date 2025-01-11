@@ -18,34 +18,7 @@
 
 <main class="bookmarks-container">
   <% @bookmarks.each do |bookmark| %>
-    <article class="bookmark-card">
-      <div class="bookmark-content">
-        <h2 class="bookmark-title">
-          <a href="<%= bookmark.url %>" target="_blank" rel="noopener">
-            <%= bookmark.title %>
-          </a>
-        </h2>
-
-        <% if bookmark.description.present? %>
-          <p class="bookmark-description"><%= bookmark.description %></p>
-        <% end %>
-
-        <% if bookmark.tags.present? %>
-          <div class="bookmark-tags">
-            <% bookmark.tags.split(',').each do |tag| %>
-              <span class="tag"><%= tag.strip %></span>
-            <% end %>
-          </div>
-        <% end %>
-      </div>
-
-      <div class="bookmark-actions">
-        <% if authenticated? %>
-          <%= link_to "Edit", edit_bookmark_path(bookmark), class: "button" %>
-          <%= button_to "Delete", bookmark_path(bookmark), method: :delete, class: "button", form: { data: { turbo_confirm: "Are you sure?" } } %>
-        <% end %>
-      </div>
-    </article>
+    <%= render bookmark %>
   <% end %>
 </main>
 
