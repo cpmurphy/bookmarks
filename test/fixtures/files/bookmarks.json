@@ -1,0 +1,9 @@
+[
+  {
+    "href": "http://another.example.com",
+    "description": "Another Example Site",
+    "extended": "Another test bookmark",
+    "tags": "test,example",
+    "time": "2024-01-01T12:00:00Z"
+  }
+] 

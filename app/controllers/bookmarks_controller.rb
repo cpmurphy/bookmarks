@@ -61,37 +61,13 @@ class BookmarksController < ApplicationController
   end
 
   def import
-    if params[:file].present?
-      json_data = JSON.parse(params[:file].read)
-      imported = 0
-      skipped = 0
+    return redirect_to_bookmarks(alert: "Please select a file to import.") unless params[:file].present?
 
-      ActiveRecord::Base.transaction do
-        json_data.each do |item|
-          bookmark = Bookmark.find_or_initialize_by(url: item["href"])
-          if bookmark.new_record?
-            bookmark.update!(
-              title: item["description"],
-              description: item["extended"],
-              tags: item["tags"].presence || "",
-              created_at: Time.zone.parse(item["time"])
-            )
-            imported += 1
-          else
-            skipped += 1
-          end
-        end
-      end
-
-      redirect_to bookmarks_path,
-        notice: "Successfully imported #{imported} bookmarks. Skipped #{skipped} duplicates."
-    else
-      redirect_to bookmarks_path, alert: "Please select a file to import."
-    end
+    import_bookmarks
   rescue JSON::ParserError
-    redirect_to bookmarks_path, alert: "Invalid JSON file format."
-  rescue => e
-    redirect_to bookmarks_path, alert: "Import failed: #{e.message}"
+    redirect_to_bookmarks(alert: "Invalid JSON file format.")
+  rescue StandardError => e
+    redirect_to_bookmarks(alert: "Import failed: #{e.message}")
   end
 
   private
@@ -103,5 +79,19 @@ class BookmarksController < ApplicationController
     # Only allow a list of trusted parameters through.
     def bookmark_params
       params.expect(bookmark: [ :url, :title, :description, :tags ])
+    end
+
+    def import_bookmarks
+      results = BookmarkImporter.new(params[:file]).import
+      redirect_to_bookmarks(notice: import_success_message(results))
+    end
+
+    def redirect_to_bookmarks(flash_message)
+      redirect_to bookmarks_path, flash_message
+    end
+
+    def import_success_message(results)
+      "Successfully imported #{results.imported} bookmarks. " \
+      "Skipped #{results.skipped} duplicates."
     end
 end

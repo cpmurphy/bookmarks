@@ -37,7 +37,14 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@user)
     assert_difference("Bookmark.count") do
       @bookmark.url = "http://example.com/2"
-      post bookmarks_url, params: { bookmark: { description: @bookmark.description, tags: @bookmark.tags, title: @bookmark.title, url: @bookmark.url } }
+      post bookmarks_url, params: {
+        bookmark: {
+          description: @bookmark.description,
+          tags: @bookmark.tags,
+          title: @bookmark.title,
+          url: @bookmark.url
+        }
+      }
     end
 
     assert_redirected_to bookmarks_path
@@ -52,7 +59,14 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
   test "should update bookmark" do
     sign_in_as(@user)
     @bookmark.url = "http://example.com/3"
-    patch bookmark_url(@bookmark), params: { bookmark: { description: @bookmark.description, tags: @bookmark.tags, title: @bookmark.title, url: @bookmark.url } }
+    patch bookmark_url(@bookmark), params: {
+      bookmark: {
+        description: @bookmark.description,
+        tags: @bookmark.tags,
+        title: @bookmark.title,
+        url: @bookmark.url
+      }
+    }
     assert_redirected_to bookmarks_path
   end
 
