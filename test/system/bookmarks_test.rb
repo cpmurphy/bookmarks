@@ -78,5 +78,4 @@ class BookmarksTest < ApplicationSystemTestCase
     assert_current_path new_session_path
     assert_text "Please sign in to modify bookmarks"
   end
-
 end

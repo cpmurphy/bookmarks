@@ -10,5 +10,4 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     click_on "Sign in"
     assert_text "Signed in successfully"
   end
-
 end
