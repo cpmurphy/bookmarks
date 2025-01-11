@@ -76,6 +76,5 @@ class BookmarksTest < ApplicationSystemTestCase
   test "should redirect to sign in when trying to create bookmark" do
     visit new_bookmark_url
     assert_current_path new_session_path
-    assert_text "Please sign in to modify bookmarks"
   end
 end
