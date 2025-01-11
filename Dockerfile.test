@@ -1,0 +1,40 @@
+# Use the same base as your main Dockerfile
+FROM ruby:3.4.1-slim
+
+# Install system dependencies including Chrome and its dependencies
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y \
+    build-essential \
+    chromium \
+    chromium-driver \
+    git \
+    pkg-config \
+    sqlite3 \
+    libjemalloc2 \
+    libvips \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
+
+# Create a non-root user to run Chrome
+RUN groupadd -r chrome && useradd -r -g chrome -G audio,video chrome \
+    && mkdir -p /home/chrome && chown -R chrome:chrome /home/chrome
+
+# Set up working directory
+WORKDIR /rails
+
+# Install gems
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+# Copy the rest of the application
+COPY . .
+
+# Set up test environment
+ENV RAILS_ENV=test
+ENV CHROME_BIN=/usr/bin/chromium
+ENV CHROME_PATH=/usr/lib/chromium/
+
+# Give chrome user access to the rails directory
+RUN chown -R chrome:chrome /rails
+
+# Switch to chrome user
+USER chrome

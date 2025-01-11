@@ -8,6 +8,8 @@ and not too smooth.
 
 To run unit tests, use `rake`.
 
+To run system tests in a Docker container, use `bin/docker-test`.
+
 ## Deployment
 
 It doesn't use Kamal, instead there is bin/deploy.sh, which expects to find
