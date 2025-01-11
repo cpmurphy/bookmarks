@@ -36,7 +36,7 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
   test "should create bookmark when signed in" do
     sign_in_as(@user)
     assert_difference("Bookmark.count") do
-      @bookmark.url = 'http://example.com/2'
+      @bookmark.url = "http://example.com/2"
       post bookmarks_url, params: { bookmark: { description: @bookmark.description, tags: @bookmark.tags, title: @bookmark.title, url: @bookmark.url } }
     end
 
@@ -51,7 +51,7 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
 
   test "should update bookmark" do
     sign_in_as(@user)
-    @bookmark.url = 'http://example.com/3'
+    @bookmark.url = "http://example.com/3"
     patch bookmark_url(@bookmark), params: { bookmark: { description: @bookmark.description, tags: @bookmark.tags, title: @bookmark.title, url: @bookmark.url } }
     assert_redirected_to bookmarks_path
   end
@@ -68,18 +68,18 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
   test "should import bookmarks from JSON file when signed in" do
     sign_in_as(@user)
     # Create a temp file with test JSON data
-    file = Tempfile.new(['bookmarks', '.json'])
-    file.write([{
+    file = Tempfile.new([ "bookmarks", ".json" ])
+    file.write([ {
       "href" => "https://example.com",
       "description" => "Example Site",
       "extended" => "A test bookmark",
       "tags" => "test,example",
       "time" => "2024-12-30T00:16:38Z"
-    }].to_json)
+    } ].to_json)
     file.rewind
 
     assert_difference("Bookmark.count") do
-      post import_bookmarks_path, params: { file: fixture_file_upload(file.path, 'application/json') }
+      post import_bookmarks_path, params: { file: fixture_file_upload(file.path, "application/json") }
     end
 
     assert_redirected_to bookmarks_path
@@ -102,17 +102,17 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
     )
 
     # Try to import the same URL
-    file = Tempfile.new(['bookmarks', '.json'])
-    file.write([{
+    file = Tempfile.new([ "bookmarks", ".json" ])
+    file.write([ {
       "href" => "https://example.com",
       "description" => "Duplicate Site",
       "time" => "2024-12-30T00:16:38Z"
-    }].to_json)
+    } ].to_json)
     file.rewind
 
     sign_in_as(@user)
     assert_no_difference("Bookmark.count") do
-      post import_bookmarks_path, params: { file: fixture_file_upload(file.path, 'application/json') }
+      post import_bookmarks_path, params: { file: fixture_file_upload(file.path, "application/json") }
     end
 
     assert_redirected_to bookmarks_path
@@ -128,11 +128,11 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
 
   test "should handle invalid JSON file when signed in" do
     sign_in_as(@user)
-    file = Tempfile.new(['bookmarks', '.json'])
+    file = Tempfile.new([ "bookmarks", ".json" ])
     file.write("This is not JSON")
     file.rewind
 
-    post import_bookmarks_path, params: { file: fixture_file_upload(file.path, 'application/json') }
+    post import_bookmarks_path, params: { file: fixture_file_upload(file.path, "application/json") }
 
     assert_redirected_to bookmarks_path
     assert_equal "Invalid JSON file format.", flash[:alert]
@@ -140,7 +140,7 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
 
   test "should import multiple bookmarks when signed in" do
     sign_in_as(@user)
-    file = Tempfile.new(['bookmarks', '.json'])
+    file = Tempfile.new([ "bookmarks", ".json" ])
     file.write([
       {
         "href" => "https://example1.com",
@@ -156,7 +156,7 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
     file.rewind
 
     assert_difference("Bookmark.count", 2) do
-      post import_bookmarks_path, params: { file: fixture_file_upload(file.path, 'application/json') }
+      post import_bookmarks_path, params: { file: fixture_file_upload(file.path, "application/json") }
     end
 
     assert_redirected_to bookmarks_path

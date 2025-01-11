@@ -7,7 +7,7 @@ class BookmarksController < ApplicationController
     @bookmarks = if authenticated?
       Bookmark.all
     else
-      Bookmark.where(private: [false, nil])
+      Bookmark.where(private: [ false, nil ])
     end
   end
 
@@ -66,13 +66,13 @@ class BookmarksController < ApplicationController
 
       ActiveRecord::Base.transaction do
         json_data.each do |item|
-          bookmark = Bookmark.find_or_initialize_by(url: item['href'])
+          bookmark = Bookmark.find_or_initialize_by(url: item["href"])
           if bookmark.new_record?
             bookmark.update!(
-              title: item['description'],
-              description: item['extended'],
-              tags: item['tags'].presence || '',
-              created_at: Time.zone.parse(item['time'])
+              title: item["description"],
+              description: item["extended"],
+              tags: item["tags"].presence || "",
+              created_at: Time.zone.parse(item["time"])
             )
             imported += 1
           else
@@ -102,5 +102,4 @@ class BookmarksController < ApplicationController
     def bookmark_params
       params.expect(bookmark: [ :url, :title, :description, :tags ])
     end
-
 end
