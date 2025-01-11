@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+# Get a list of files that have changed
+changed_files = `git diff --name-only origin/main HEAD`.split("\n")
+ruby_files = changed_files.select { |file| file.end_with?('.rb') }
+
+if ruby_files.any?
+  puts "Running Rubocop on changed files..."
+  system("bundle exec rubocop #{ruby_files.join(' ')}")
+  
+  if $?.success?
+    puts "✅ Rubocop passed"
+    exit 0
+  else
+    puts "❌ Rubocop failed. Please fix the issues before pushing."
+    exit 1
+  end
+else
+  puts "No Ruby files changed, skipping Rubocop"
+  exit 0
+end 
