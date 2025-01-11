@@ -1,22 +1,28 @@
-<div id="<%= dom_id bookmark %>">
-  <p>
-    <strong>Url:</strong>
-    <%= bookmark.url %>
-  </p>
+<article id="bookmark_<%= bookmark.id %>" class="bookmark-card">
+  <div class="bookmark-content">
+    <h2 class="bookmark-title">
+      <a href="<%= bookmark.url %>" target="_blank" rel="noopener">
+        <%= bookmark.title %>
+      </a>
+    </h2>
 
-  <p>
-    <strong>Title:</strong>
-    <%= bookmark.title %>
-  </p>
+    <% if bookmark.description.present? %>
+      <p class="bookmark-description"><%= bookmark.description %></p>
+    <% end %>
 
-  <p>
-    <strong>Description:</strong>
-    <%= bookmark.description %>
-  </p>
+    <% if bookmark.tags.present? %>
+      <div class="bookmark-tags">
+        <% bookmark.tags.split(',').each do |tag| %>
+          <span class="tag"><%= tag.strip %></span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 
-  <p>
-    <strong>Tags:</strong>
-    <%= bookmark.tags %>
-  </p>
-
-</div>
+  <% if authenticated? %>
+    <div class="bookmark-actions">
+      <%= link_to "Edit", edit_bookmark_path(bookmark), class: "button" %>
+      <%= button_to "Delete", bookmark_path(bookmark), method: :delete, class: "button", form: { data: { turbo_confirm: "Are you sure?" } } %>
+    </div>
+  <% end %>
+</article>

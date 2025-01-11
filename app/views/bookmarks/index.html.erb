@@ -42,6 +42,7 @@
       <div class="bookmark-actions">
         <% if authenticated? %>
           <%= link_to "Edit", edit_bookmark_path(bookmark), class: "button" %>
+          <%= button_to "Delete", bookmark_path(bookmark), method: :delete, class: "button", form: { data: { turbo_confirm: "Are you sure?" } } %>
         <% end %>
       </div>
     </article>
