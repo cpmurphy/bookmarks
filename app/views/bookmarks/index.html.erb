@@ -28,7 +28,7 @@
 <%= turbo_frame_tag "bookmarks" do %>
   <div class="bookmarks-container">
     <% if @bookmarks.any? %>
-      <%= render @bookmarks %>
+      <%= render partial: "bookmark", collection: @bookmarks %>
     <% else %>
       <p class="no-results">No bookmarks found</p>
     <% end %>
