@@ -1,0 +1,18 @@
+.popup {
+  padding: var(--spacing-unit);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.popup-message {
+  text-align: center;
+  padding: var(--spacing-unit);
+  background: var(--card-background);
+  border-radius: 4px;
+  margin-top: var(--spacing-unit);
+}
+
+.popup-message p {
+  margin: 0;
+  color: var(--text-color);
+}

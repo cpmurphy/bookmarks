@@ -16,7 +16,11 @@ class BookmarksController < ApplicationController
 
   # GET /bookmarks/new
   def new
-    @bookmark = Bookmark.new
+    @bookmark = Bookmark.new(
+      url: params[:url],
+      title: params[:title]
+    )
+    render layout: "popup" if params[:popup] == "true"
   end
 
   # GET /bookmarks/1/edit
@@ -30,12 +34,21 @@ class BookmarksController < ApplicationController
     respond_to do |format|
       if @bookmark.save
         format.html {
-          redirect_to user_bookmarks_path(Current.user.username),
-            notice: "Bookmark was successfully created."
+          if params[:bookmark][:popup].present?
+            # For popup window
+            render :create, layout: "popup"
+          else
+            # For regular form
+            redirect_to user_bookmarks_path(Current.user.username), notice: "Bookmark was successfully created."
+          end
         }
         format.json { render json: @bookmark, status: :created }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html {
+          render :new,
+          status: :unprocessable_entity,
+          layout: params[:bookmark][:popup] == "true" ? "popup" : "application"
+        }
         format.json { render json: @bookmark.errors, status: :unprocessable_entity }
       end
     end

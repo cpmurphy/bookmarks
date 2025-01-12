@@ -1,7 +1,11 @@
-<%= form_with(model: [Current.user, bookmark], url: bookmark.new_record? ? user_bookmarks_path(@owner.username) : user_bookmark_path(@owner.username, bookmark)) do |form| %>
+<%= form_with(model: [Current.user, bookmark],
+              url: bookmark.new_record? ? user_bookmarks_path(Current.user.username) : user_bookmark_path(Current.user.username, bookmark),
+              data: { turbo: false }) do |form| %>
+  <%= form.hidden_field :popup, value: params[:popup] %>
+
   <% if bookmark.errors.any? %>
     <div style="color: red">
-      <h2><%= pluralize(bookmark.errors.count, "error") %> prohibited this bookmark from being saved:</h2>
+      <h2><%= pluralize(bookmark.errors.count, "error") %> prevented this bookmark from being saved:</h2>
 
       <ul>
         <% bookmark.errors.each do |error| %>
