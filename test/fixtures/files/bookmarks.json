@@ -4,6 +4,7 @@
     "description": "Another Example Site",
     "extended": "Another test bookmark",
     "tags": "test,example",
+    "is_private": false,
     "time": "2024-01-01T12:00:00Z"
   }
-] 
+]

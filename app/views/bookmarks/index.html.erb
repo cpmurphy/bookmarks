@@ -7,7 +7,7 @@
 <header class="page-header">
   <h1>Bookmarks</h1>
 
-  <%= form_with url: bookmarks_path, method: :get, data: { turbo_frame: "bookmarks", turbo_action: "advance" }, class: "search-form" do |form| %>
+  <%= form_with url: user_bookmarks_path(@owner.username), method: :get, data: { turbo_frame: "bookmarks", turbo_action: "advance" }, class: "search-form" do |form| %>
     <%= form.search_field :query,
         value: params[:query],
         placeholder: "Search bookmarks...",
@@ -17,7 +17,7 @@
 
   <div class="actions">
     <% if authenticated? %>
-      <%= button_to "New bookmark", new_bookmark_path, method: :get, class: "button primary" %>
+      <%= button_to "New bookmark", new_user_bookmark_path(Current.user.username), method: :get, class: "button primary" %>
       <%= button_to "Sign out", session_path, method: :delete, class: "button" %>
     <% else %>
       <%= button_to "Sign in", new_session_path, method: :get, class: "button" %>
@@ -38,7 +38,7 @@
 <% if authenticated? %>
   <section class="import-section">
     <h2>Import Bookmarks</h2>
-    <%= form_tag import_bookmarks_path, multipart: true, class: "import-form" do %>
+    <%= form_tag import_user_bookmarks_path(Current.user.username), multipart: true, class: "import-form" do %>
     <div class="file-input-wrapper">
       <%= file_field_tag :file, class: "file-input", accept: "application/json" %>
         <%= submit_tag "Import JSON", class: "button" %>

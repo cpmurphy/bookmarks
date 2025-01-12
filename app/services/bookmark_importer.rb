@@ -1,8 +1,9 @@
 class BookmarkImporter
   Results = Struct.new(:imported, :skipped)
 
-  def initialize(file)
+  def initialize(file, user)
     @file = file
+    @user = user
     @imported = 0
     @skipped = 0
   end
@@ -32,6 +33,7 @@ class BookmarkImporter
 
   def create_bookmark(bookmark, item)
     bookmark.update!(
+      user: @user,
       title: item["description"],
       description: item["extended"],
       tags: item["tags"].presence || "",

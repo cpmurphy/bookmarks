@@ -3,13 +3,15 @@
 one:
   url: http://example.com
   title: Example Site
-  description: A public bookmark
+  description: A public bookmark for testing
   tags: tag1, tag2
-  private: false
+  is_private: false
+  user: one
 
-private:
+private_bookmark:
   url: http://private.example.com
   title: Private Site
-  description: A private bookmark
+  description: A private bookmark for testing
   tags: tag3, tag4
-  private: true
+  is_private: true
+  user: one

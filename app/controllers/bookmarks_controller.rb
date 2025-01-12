@@ -1,13 +1,14 @@
 class BookmarksController < ApplicationController
   allow_unauthenticated_access only: %i[ index ]
+  before_action :set_owner
   before_action :set_bookmark, only: %i[ edit update destroy ]
 
   # GET /bookmarks or /bookmarks.json
   def index
-    @bookmarks = if authenticated?
-      base_scope = Bookmark.all
+    @bookmarks = if authenticated? && Current.user == @owner
+      base_scope = @owner.bookmarks
     else
-      base_scope = Bookmark.where(private: [ false, nil ])
+      base_scope = @owner.bookmarks.public_only
     end
 
     @bookmarks = base_scope.search(params[:query]) if params[:query].present?
@@ -24,11 +25,14 @@ class BookmarksController < ApplicationController
 
   # POST /bookmarks or /bookmarks.json
   def create
-    @bookmark = Bookmark.new(bookmark_params)
+    @bookmark = Current.user.bookmarks.build(bookmark_params)
 
     respond_to do |format|
       if @bookmark.save
-        format.html { redirect_to bookmarks_path, notice: "Bookmark was successfully created." }
+        format.html {
+          redirect_to user_bookmarks_path(Current.user.username),
+            notice: "Bookmark was successfully created."
+        }
         format.json { render json: @bookmark, status: :created }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -41,7 +45,10 @@ class BookmarksController < ApplicationController
   def update
     respond_to do |format|
       if @bookmark.update(bookmark_params)
-        format.html { redirect_to bookmarks_path, notice: "Bookmark was successfully updated." }
+        format.html {
+          redirect_to user_bookmarks_path(Current.user.username),
+            notice: "Bookmark was successfully updated."
+        }
         format.json { render json: @bookmark, status: :ok }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -55,7 +62,10 @@ class BookmarksController < ApplicationController
     @bookmark.destroy!
 
     respond_to do |format|
-      format.html { redirect_to bookmarks_path, status: :see_other, notice: "Bookmark was successfully deleted." }
+      format.html {
+        redirect_to user_bookmarks_path(Current.user.username),
+          status: :see_other, notice: "Bookmark was successfully deleted."
+      }
       format.json { head :no_content }
     end
   end
@@ -72,22 +82,26 @@ class BookmarksController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    def set_owner
+      @owner = User.find_by!(username: params[:username])
+    end
+
     def set_bookmark
-      @bookmark = Bookmark.find(params.expect(:id))
+      @bookmark = @owner.bookmarks.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def bookmark_params
-      params.expect(bookmark: [ :url, :title, :description, :tags ])
+      params.require(:bookmark).permit(:url, :title, :description, :tags, :is_private)
     end
 
     def import_bookmarks
-      results = BookmarkImporter.new(params[:file]).import
+      results = BookmarkImporter.new(params[:file], Current.user).import
       redirect_to_bookmarks(notice: import_success_message(results))
     end
 
     def redirect_to_bookmarks(flash_message)
-      redirect_to bookmarks_path, flash_message
+      redirect_to user_bookmarks_path(Current.user.username), flash_message
     end
 
     def import_success_message(results)

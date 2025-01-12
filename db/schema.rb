@@ -18,8 +18,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_05_210857) do
     t.string "tags"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id"
-    t.boolean "private"
+    t.boolean "is_private"
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_bookmarks_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -36,8 +37,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_05_210857) do
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "username"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "bookmarks", "users"
   add_foreign_key "sessions", "users"
 end

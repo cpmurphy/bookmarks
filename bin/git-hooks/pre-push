@@ -7,7 +7,7 @@ ruby_files = changed_files.select { |file| file.end_with?('.rb') }
 if ruby_files.any?
   puts "Running Rubocop on changed files..."
   system("bundle exec rubocop #{ruby_files.join(' ')}")
-  
+
   if $?.success?
     puts "✅ Rubocop passed"
     exit 0
@@ -18,4 +18,4 @@ if ruby_files.any?
 else
   puts "No Ruby files changed, skipping Rubocop"
   exit 0
-end 
+end

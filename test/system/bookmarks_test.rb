@@ -3,31 +3,31 @@ require "application_system_test_case"
 class BookmarksTest < ApplicationSystemTestCase
   setup do
     @bookmark = bookmarks(:one)
-    @private_bookmark = bookmarks(:private)
+    @private_bookmark = bookmarks(:private_bookmark)
     @user = users(:one)
   end
 
   test "visiting the index" do
-    visit bookmarks_url
+    visit user_bookmarks_url(@user.username)
     assert_selector "h1", text: "Bookmarks"
   end
 
   test "should show public bookmarks when not signed in" do
-    visit bookmarks_url
+    visit user_bookmarks_url(@user.username)
     assert_text @bookmark.title
     assert_no_text @private_bookmark.title
   end
 
   test "should show all bookmarks when signed in" do
     sign_in_as(@user)
-    visit bookmarks_url
+    visit user_bookmarks_url(@user.username)
     assert_text @bookmark.title
     assert_text @private_bookmark.title
   end
 
   test "should create bookmark when signed in" do
     sign_in_as(@user)
-    visit bookmarks_url
+    visit user_bookmarks_url(@user.username)
     click_on "New bookmark"
 
     fill_in "Url", with: "http://example.com/new"
@@ -41,7 +41,7 @@ class BookmarksTest < ApplicationSystemTestCase
 
   test "should update bookmark when signed in" do
     sign_in_as(@user)
-    visit bookmarks_url
+    visit user_bookmarks_url(@user.username)
 
     within(find_bookmark_card("Example Site")) do
       click_on "Edit"
@@ -56,7 +56,7 @@ class BookmarksTest < ApplicationSystemTestCase
 
   test "should delete bookmark when signed in" do
     sign_in_as(@user)
-    visit bookmarks_url
+    visit user_bookmarks_url(@user.username)
     page.accept_confirm do
       within(find_bookmark_card("Example Site")) do
         click_on "Delete"
@@ -68,19 +68,19 @@ class BookmarksTest < ApplicationSystemTestCase
   end
 
   test "should not show edit/delete buttons when not signed in" do
-    visit bookmarks_url
+    visit user_bookmarks_url(@user.username)
     assert_no_text "Edit"
     assert_no_text "Delete"
     assert_no_text "New bookmark"
   end
 
   test "should redirect to sign in when trying to create bookmark" do
-    visit new_bookmark_url
+    visit new_user_bookmark_url(@user.username)
     assert_current_path new_session_path
   end
 
   test "can search bookmarks" do
-    visit bookmarks_url
+    visit user_bookmarks_url(@user.username)
 
     fill_in "query", with: "Example"
 
@@ -89,7 +89,7 @@ class BookmarksTest < ApplicationSystemTestCase
   end
 
   test "shows no results message when search finds nothing" do
-    visit bookmarks_url
+    visit user_bookmarks_url(@user.username)
 
     fill_in "query", with: "nonexistent"
 
@@ -98,7 +98,7 @@ class BookmarksTest < ApplicationSystemTestCase
   end
 
   test "search respects privacy when not signed in" do
-    visit bookmarks_url
+    visit user_bookmarks_url(@user.username)
 
     fill_in "query", with: "private"
 
@@ -107,7 +107,7 @@ class BookmarksTest < ApplicationSystemTestCase
 
   test "search shows private bookmarks when signed in" do
     sign_in_as(@user)
-    visit bookmarks_url
+    visit user_bookmarks_url(@user.username)
 
     fill_in "query", with: "private"
 
@@ -117,6 +117,6 @@ class BookmarksTest < ApplicationSystemTestCase
   private
 
   def find_bookmark_card(title)
-    find("article.bookmark-card", text: title)
+    find(".bookmark-card", text: title)
   end
 end

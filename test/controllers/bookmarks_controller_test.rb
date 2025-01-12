@@ -2,13 +2,13 @@ require "test_helper"
 
 class BookmarksControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @bookmark = bookmarks(:one)
-    @private_bookmark = bookmarks(:private)
     @user = users(:one)
+    @bookmark = bookmarks(:one)
+    @private_bookmark = bookmarks(:private_bookmark)
   end
 
-  test "should get index with public bookmarks when not signed in" do
-    get bookmarks_url
+  test "should get index" do
+    get user_bookmarks_url(@user.username)
     assert_response :success
     assert_includes @response.body, @bookmark.title
     assert_not_includes @response.body, @private_bookmark.title
@@ -16,7 +16,7 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
 
   test "should get index with all bookmarks when signed in" do
     sign_in_as(@user)
-    get bookmarks_url
+    get user_bookmarks_url(@user.username)
     assert_response :success
     assert_includes @response.body, @bookmark.title
     assert_includes @response.body, @private_bookmark.title
@@ -24,42 +24,40 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
 
   test "should get new when signed in" do
     sign_in_as(@user)
-    get new_bookmark_url
+    get new_user_bookmark_path(@user.username)
     assert_response :success
   end
 
   test "should not get new when not signed in" do
-    get new_bookmark_url
+    get new_user_bookmark_path(@user.username)
     assert_redirected_to new_session_path
   end
 
   test "should create bookmark when signed in" do
     sign_in_as(@user)
     assert_difference("Bookmark.count") do
-      @bookmark.url = "http://example.com/2"
-      post bookmarks_url, params: {
+      post user_bookmarks_path(@user.username), params: {
         bookmark: {
-          description: @bookmark.description,
-          tags: @bookmark.tags,
-          title: @bookmark.title,
-          url: @bookmark.url
+          url: "http://example.com/new",
+          title: "New Bookmark"
         }
       }
     end
 
-    assert_redirected_to bookmarks_path
+    assert_redirected_to user_bookmarks_url(@user.username)
   end
 
   test "should get edit" do
     sign_in_as(@user)
-    get edit_bookmark_url(@bookmark)
+    get edit_user_bookmark_path(@user.username,
+          @bookmark)
     assert_response :success
   end
 
   test "should update bookmark" do
     sign_in_as(@user)
     @bookmark.url = "http://example.com/3"
-    patch bookmark_url(@bookmark), params: {
+    patch user_bookmark_path(@user.username, @bookmark), params: {
       bookmark: {
         description: @bookmark.description,
         tags: @bookmark.tags,
@@ -67,16 +65,16 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
         url: @bookmark.url
       }
     }
-    assert_redirected_to bookmarks_path
+    assert_redirected_to user_bookmarks_path(@user.username)
   end
 
   test "should destroy bookmark when signed in" do
     sign_in_as(@user)
     assert_difference("Bookmark.count", -1) do
-      delete bookmark_url(@bookmark)
+      delete user_bookmark_path(@user.username, @bookmark)
     end
 
-    assert_redirected_to bookmarks_url
+    assert_redirected_to user_bookmarks_path(@user.username)
   end
 
   test "should import bookmarks from JSON file when signed in" do
@@ -93,10 +91,11 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
     file.rewind
 
     assert_difference("Bookmark.count") do
-      post import_bookmarks_path, params: { file: fixture_file_upload(file.path, "application/json") }
+      post import_user_bookmarks_path(@user.username),
+        params: { file: fixture_file_upload(file.path, "application/json") }
     end
 
-    assert_redirected_to bookmarks_path
+    assert_redirected_to user_bookmarks_path(@user.username)
     assert_match /Successfully imported 1 bookmark/, flash[:notice]
 
     # Verify the imported bookmark data
@@ -112,7 +111,8 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
     # First create a bookmark
     Bookmark.create!(
       url: "https://example.com",
-      title: "Existing Bookmark"
+      title: "Existing Bookmark",
+      user: @user
     )
 
     # Try to import the same URL
@@ -126,17 +126,18 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
 
     sign_in_as(@user)
     assert_no_difference("Bookmark.count") do
-      post import_bookmarks_path, params: { file: fixture_file_upload(file.path, "application/json") }
+      post import_user_bookmarks_path(@user.username),
+        params: { file: fixture_file_upload(file.path, "application/json") }
     end
 
-    assert_redirected_to bookmarks_path
+    assert_redirected_to user_bookmarks_path(@user.username)
     assert_match /Skipped 1 duplicate/, flash[:notice]
   end
 
   test "should handle missing file parameter when signed in" do
     sign_in_as(@user)
-    post import_bookmarks_path
-    assert_redirected_to bookmarks_path
+    post import_user_bookmarks_path(@user.username)
+    assert_redirected_to user_bookmarks_path(@user.username)
     assert_equal "Please select a file to import.", flash[:alert]
   end
 
@@ -146,9 +147,10 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
     file.write("This is not JSON")
     file.rewind
 
-    post import_bookmarks_path, params: { file: fixture_file_upload(file.path, "application/json") }
+    post import_user_bookmarks_path(@user.username),
+      params: { file: fixture_file_upload(file.path, "application/json") }
 
-    assert_redirected_to bookmarks_path
+    assert_redirected_to user_bookmarks_path(@user.username)
     assert_equal "Invalid JSON file format.", flash[:alert]
   end
 
@@ -170,10 +172,11 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
     file.rewind
 
     assert_difference("Bookmark.count", 2) do
-      post import_bookmarks_path, params: { file: fixture_file_upload(file.path, "application/json") }
+      post import_user_bookmarks_path(@user.username),
+        params: { file: fixture_file_upload(file.path, "application/json") }
     end
 
-    assert_redirected_to bookmarks_path
+    assert_redirected_to user_bookmarks_path(@user.username)
     assert_match /Successfully imported 2 bookmarks/, flash[:notice]
   end
 
