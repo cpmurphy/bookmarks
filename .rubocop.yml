@@ -15,17 +15,13 @@ AllCops:
   NewCops: enable
   TargetRubyVersion: 3.4
   Exclude:
-    - 'db/schema.rb'
-    - 'db/migrate/**/*'
+    - 'db/**/*'
     - 'config/**/*'
     - 'script/**/*'
     - 'bin/**/*'
     - 'vendor/**/*'
     - 'tmp/**/*'
     - 'node_modules/**/*'
-    - 'lib/tasks/**/*'
-    - 'Rakefile'
-    - 'config.ru'
 
 Style/Documentation:
   Enabled: false
