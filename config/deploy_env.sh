@@ -1,3 +1,4 @@
 DEPLOY_USER=root
 DEPLOY_HOST=noctilucent.org
-DEPLOY_DIR=/var/www/bookmarx
+APP_NAME=bookmarx
+DEPLOY_DIR="/var/www/${APP_NAME}"
