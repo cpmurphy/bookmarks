@@ -2,8 +2,9 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
-  scope "/:username", as: :user do
-    resources :bookmarks do
+  # Combine the bookmark routes under /u/:username
+  scope "/u/:username", as: :user do
+    resources :bookmarks, path: '' do
       collection do
         post :import
       end
