@@ -6,6 +6,8 @@
 
 <br>
 
-<div>
-  <%= link_to "Back to bookmarks", user_bookmarks_path(Current.user.username) %>
-</div>
+<% unless params[:popup] == 'true' %>
+  <div>
+    <%= link_to "Back to bookmarks", user_bookmarks_path(Current.user.username) %>
+  </div>
+<% end %>
