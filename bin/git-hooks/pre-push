@@ -1,8 +1,19 @@
 #!/usr/bin/env ruby
 
+require 'yaml'
+
+# Load RuboCop configuration
+config_file = File.join(File.dirname(__FILE__), '..', '..', '.rubocop.yml')
+config = YAML.load_file(config_file)
+excluded_patterns = config.dig('AllCops', 'Exclude') || []
+
 # Get a list of files that have changed
 changed_files = `git diff --name-only origin/main HEAD`.split("\n")
-ruby_files = changed_files.select { |file| file.end_with?('.rb') }
+
+# Filter Ruby files and exclude patterns from RuboCop config
+ruby_files = changed_files.select do |file|
+  file.end_with?('.rb') && !excluded_patterns.any? { |pattern| File.fnmatch?(pattern, file) }
+end
 
 if ruby_files.any?
   puts "Running Rubocop on changed files..."
@@ -16,6 +27,6 @@ if ruby_files.any?
     exit 1
   end
 else
-  puts "No Ruby files changed, skipping Rubocop"
+  puts "No Ruby files to check, skipping Rubocop"
   exit 0
 end
