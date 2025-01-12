@@ -42,7 +42,7 @@
 <% if authenticated? %>
   <section class="import-section">
     <h2>Import Bookmarks</h2>
-    <%= form_tag import_user_bookmarks_path(Current.user.username), multipart: true, class: "import-form" do %>
+    <%= form_tag import_user_bookmarks_path(Current.user.username), multipart: true, class: "import-form", data: { turbo: false } do %>
     <div class="file-input-wrapper">
       <%= file_field_tag :file, class: "file-input", accept: "application/json" %>
         <%= submit_tag "Import JSON", class: "button" %>

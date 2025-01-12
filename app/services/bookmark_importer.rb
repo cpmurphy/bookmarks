@@ -21,23 +21,37 @@ class BookmarkImporter
   private
 
   def process_bookmark(item)
-    bookmark = Bookmark.find_or_initialize_by(url: item["href"])
+    bookmark = Bookmark.find_by(url: item["href"])
 
-    if bookmark.new_record?
-      create_bookmark(bookmark, item)
-      @imported += 1
-    else
+    if bookmark
       @skipped += 1
+    else
+      create_bookmark(item)
+      @imported += 1
     end
   end
 
-  def create_bookmark(bookmark, item)
-    bookmark.update!(
+  def create_bookmark(item)
+    title = item["description"]
+    if !title.present?
+        title = "[no title]"
+    end
+
+    description = item["extended"]
+    tags = item["tags"].presence || ""
+    if item["time"].present?
+        created_at = Time.zone.parse(item["time"])
+    else
+        created_at = Time.zone.now
+    end
+
+    Bookmark.create!(
       user: @user,
-      title: item["description"],
-      description: item["extended"],
-      tags: item["tags"].presence || "",
-      created_at: Time.zone.parse(item["time"])
+      url: item["href"],
+      title: title,
+      description: description,
+      tags: tags,
+      created_at: created_at
     )
   end
 end

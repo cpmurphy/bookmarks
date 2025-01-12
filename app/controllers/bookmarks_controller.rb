@@ -1,4 +1,6 @@
 class BookmarksController < ApplicationController
+  include ActionView::Helpers::TextHelper
+
   allow_unauthenticated_access only: %i[ index ]
   before_action :set_owner
   before_action :set_bookmark, only: %i[ edit update destroy ]
@@ -118,7 +120,7 @@ class BookmarksController < ApplicationController
     end
 
     def import_success_message(results)
-      "Successfully imported #{results.imported} bookmarks. " \
-      "Skipped #{results.skipped} duplicates."
+      "Successfully imported #{pluralize(results.imported, "bookmark")}. " \
+      "Skipped #{pluralize(results.skipped, "duplicate")}."
     end
 end

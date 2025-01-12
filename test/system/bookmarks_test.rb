@@ -114,6 +114,106 @@ class BookmarksTest < ApplicationSystemTestCase
     assert_selector ".bookmark-card", text: "Private Site"
   end
 
+  test "should import bookmarks when signed in" do
+    sign_in_as(@user)
+    visit user_bookmarks_url(@user.username)
+
+    # Create a temporary file with bookmark data
+    file = Tempfile.new([ "bookmarks", ".json" ])
+    file.write(<<~JSON)
+  [
+    {
+      "href": "http://example.com/1",
+      "description": "Example Site 1",
+      "extended": "System testing import bookmark 1",
+      "tags": "test,example",
+      "is_private": false,
+      "time": "2024-01-01T12:00:00Z"
+    },
+    {
+      "href": "http://example.com/2",
+      "description": "Example Site 2",
+      "extended": "System testing import bookmark 2",
+      "tags": "test,example",
+      "is_private": false,
+      "time": "2024-01-02T12:00:00Z"
+    }
+  ]
+    JSON
+    file.rewind
+
+    # Attach and submit the file
+    attach_file find("input[type=file]")[:name], file.path
+    click_on "Import"
+
+    # Verify the bookmarks were imported
+    assert_text "Successfully imported 2 bookmarks"
+    assert_text "Example Site 1"
+    assert_text "Example Site 2"
+    assert_text "System testing import bookmark 1"
+    assert_text "System testing import bookmark 2"
+
+    # Clean up
+    file.close
+    file.unlink
+  end
+
+  test "should not allow import when not signed in" do
+    visit user_bookmarks_url(@user.username)
+    assert_no_selector "input[type=file]"
+    assert_no_text "Import"
+  end
+
+  test "should handle duplicate URLs during import" do
+    sign_in_as(@user)
+    visit user_bookmarks_url(@user.username)
+
+    # Create a bookmark that will conflict with import
+    @user.bookmarks.create!(
+      url: "http://example.com/1",
+      title: "Existing Site",
+      description: "Existing description"
+    )
+
+    # Create import file with duplicate URL
+    file = Tempfile.new([ "bookmarks", ".json" ])
+    file.write(<<~JSON)
+  [
+    {
+      "href": "http://example.com/1",
+      "description": "Example Site 1 duplicate",
+      "extended": "System testing import bookmark 1",
+      "tags": "test,example",
+      "is_private": false,
+      "time": "2024-01-01T12:00:00Z"
+    },
+    {
+      "href": "http://example.com/2",
+      "description": "Example Site 2",
+      "extended": "System testing import bookmark 2",
+      "tags": "test,example",
+      "is_private": false,
+      "time": "2024-01-02T12:00:00Z"
+    }
+  ]
+    JSON
+    file.rewind
+
+    # Attempt import
+    attach_file find("input[type=file]")[:name], file.path
+    click_on "Import"
+
+    # Verify results
+    assert_text "Successfully imported 1 bookmark."
+    assert_text "Skipped 1 duplicate."
+    assert_text "Example Site 2"  # New bookmark should be imported
+    assert_text "Existing Site"   # Original bookmark should remain
+
+    # Clean up
+    file.close
+    file.unlink
+  end
+
   private
 
   def find_bookmark_card(title)
