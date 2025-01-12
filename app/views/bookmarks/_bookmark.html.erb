@@ -1,10 +1,15 @@
-<article class="bookmark-card">
+<article class="bookmark-card <%= 'is-private' if bookmark.is_private %>">
   <div class="bookmark-content">
-    <h2 class="bookmark-title">
-      <a href="<%= bookmark.url %>" target="_blank" rel="noopener">
-        <%= bookmark.title %>
-      </a>
-    </h2>
+    <div class="bookmark-header">
+      <h2 class="bookmark-title">
+        <a href="<%= bookmark.url %>" target="_blank" rel="noopener">
+          <%= bookmark.title %>
+        </a>
+      </h2>
+      <% if bookmark.is_private %>
+        <span class="private-badge" title="Private bookmark">🔒</span>
+      <% end %>
+    </div>
 
     <% if bookmark.description.present? %>
       <p class="bookmark-description"><%= bookmark.description %></p>

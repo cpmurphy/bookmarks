@@ -7,6 +7,10 @@
   --border-color: #e1e8ed;
   --tag-background: #edf2f7;
   --spacing-unit: 1rem;
+  --accent-color: #3182ce;
+  --accent-color-dark: #4299e1;
+  --private-background: #fbfcf8;
+  --private-background-dark: #694848;
 }
 
 /* Base styles */
@@ -225,6 +229,9 @@ body {
     --text-color: #e0e0e0;
     --border-color: #404040;
     --tag-background: #404040;
+    --accent-color: #4299e1;
+    --accent-color-dark: #63b3ed;
+    --private-background: var(--private-background-dark);
   }
 
   .button {
@@ -284,4 +291,27 @@ body {
   color: var(--text-color);
   padding: var(--spacing-unit);
   font-style: italic;
+}
+
+.bookmark-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-unit);
+}
+
+.private-badge {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+.is-private {
+  background: var(--private-background);
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .is-private {
+    background: var(--private-background-dark);
+  }
 }
