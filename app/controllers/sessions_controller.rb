@@ -5,9 +5,6 @@ class SessionsController < ApplicationController
   }
 
   def new
-    if authenticated? && Current.user
-      redirect_to user_bookmarks_path(Current.user.username)
-    end
   end
 
   def create
@@ -23,7 +20,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session[:user_id] = nil
-    redirect_to root_path, notice: "Signed out successfully"
+    terminate_session
+    redirect_to new_session_path, notice: "Signed out successfully"
   end
 end

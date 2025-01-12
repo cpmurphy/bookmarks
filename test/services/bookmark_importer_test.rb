@@ -2,7 +2,7 @@ require "test_helper"
 
 class BookmarkImporterTest < ActiveSupport::TestCase
   setup do
-    @user = users(:one)
+    @user = users(:first_user)
   end
 
   test "imports new bookmarks" do

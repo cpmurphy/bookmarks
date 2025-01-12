@@ -1,12 +1,12 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
+public_bookmark:
   url: http://example.com
   title: Example Site
   description: A public bookmark for testing
   tags: tag1, tag2
   is_private: false
-  user: one
+  user: first_user
 
 private_bookmark:
   url: http://private.example.com
@@ -14,4 +14,4 @@ private_bookmark:
   description: A private bookmark for testing
   tags: tag3, tag4
   is_private: true
-  user: one
+  user: first_user

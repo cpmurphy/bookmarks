@@ -2,9 +2,9 @@ require "application_system_test_case"
 
 class BookmarksTest < ApplicationSystemTestCase
   setup do
-    @bookmark = bookmarks(:one)
+    @bookmark = bookmarks(:public_bookmark)
     @private_bookmark = bookmarks(:private_bookmark)
-    @user = users(:one)
+    @user = users(:first_user)
   end
 
   test "visiting the index" do

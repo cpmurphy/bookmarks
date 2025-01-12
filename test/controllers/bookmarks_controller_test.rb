@@ -2,8 +2,8 @@ require "test_helper"
 
 class BookmarksControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @user = users(:one)
-    @bookmark = bookmarks(:one)
+    @user = users(:first_user)
+    @bookmark = bookmarks(:public_bookmark)
     @private_bookmark = bookmarks(:private_bookmark)
   end
 
