@@ -17,26 +17,8 @@ class ToolsController < ApplicationController
   end
 
   def export
-    @bookmarks = if params[:start_id].present?
-      start_bookmark = Current.user.bookmarks.find(params[:start_id])
-      Current.user.bookmarks.where("created_at >= ?", start_bookmark.created_at)
-    else
-      Current.user.bookmarks
-    end
-
-    bookmarks_data = @bookmarks.map do |bookmark|
-      {
-        href: bookmark.url,
-        description: bookmark.title,
-        extended: bookmark.description,
-        meta: "",
-        hash: Digest::MD5.hexdigest(bookmark.url),
-        time: bookmark.created_at.iso8601,
-        shared: bookmark.is_private ? "no" : "yes",
-        toread: "no",
-        tags: bookmark.tags
-      }
-    end
+    exporter = BookmarkExporter.new(Current.user)
+    bookmarks_data = exporter.export(start_id: params[:start_id])
 
     respond_to do |format|
       format.json do
@@ -48,20 +30,8 @@ class ToolsController < ApplicationController
   end
 
   def search
-    @bookmarks = Current.user.bookmarks
-      .where("title LIKE ? OR url LIKE ?", "%#{params[:query]}%", "%#{params[:query]}%")
-      .order(created_at: :desc)
-      .limit(10)
-      .select(:id, :title, :url, :created_at)
-
-    render json: @bookmarks.map { |b|
-      {
-        id: b.id,
-        title: b.title,
-        url: b.url,
-        date: b.created_at.strftime("%Y-%m-%d")
-      }
-    }
+    exporter = BookmarkExporter.new(Current.user)
+    render json: exporter.search(params[:query])
   end
 
   private
