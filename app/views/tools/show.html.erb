@@ -1,0 +1,27 @@
+<% content_for :title, "Tools" %>
+
+<% if notice %>
+  <div class="notice"><%= notice %></div>
+<% end %>
+
+<% if alert %>
+  <div class="alert"><%= alert %></div>
+<% end %>
+
+<header class="page-header">
+  <h1>Tools</h1>
+  
+  <div class="actions">
+    <%= button_to "Back to bookmarks", user_bookmarks_path(Current.user.username), method: :get, class: "button" %>
+  </div>
+</header>
+
+<section class="import-section">
+  <h2>Import Bookmarks</h2>
+  <%= form_tag import_tools_path, multipart: true, class: "import-form", data: { turbo: false } do %>
+    <div class="file-input-wrapper">
+      <%= file_field_tag :file, class: "file-input", accept: "application/json" %>
+      <%= submit_tag "Import JSON", class: "button" %>
+    </div>
+  <% end %>
+</section> 

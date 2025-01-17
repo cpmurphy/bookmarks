@@ -116,10 +116,10 @@ class BookmarksTest < ApplicationSystemTestCase
 
   test "should import bookmarks when signed in" do
     sign_in_as(@user)
-    visit user_bookmarks_url(@user.username)
+    visit tools_path
 
     # Create a temporary file with bookmark data
-    file = Tempfile.new([ "bookmarks", ".json" ])
+    file = Tempfile.new(["bookmarks", ".json"])
     file.write(<<~JSON)
   [
     {
@@ -144,10 +144,13 @@ class BookmarksTest < ApplicationSystemTestCase
 
     # Attach and submit the file
     attach_file find("input[type=file]")[:name], file.path
-    click_on "Import"
+    click_on "Import JSON"
 
     # Verify the bookmarks were imported
     assert_text "Successfully imported 2 bookmarks"
+
+    # Visit bookmarks page to verify the imported bookmarks
+    click_on "Back to bookmarks"
     assert_text "Example Site 1"
     assert_text "Example Site 2"
     assert_text "System testing import bookmark 1"
@@ -158,16 +161,14 @@ class BookmarksTest < ApplicationSystemTestCase
     file.unlink
   end
 
-  test "should not allow import when not signed in" do
-    visit user_bookmarks_url(@user.username)
-    assert_no_selector "input[type=file]"
-    assert_no_text "Import"
+  test "should not allow access to tools when not signed in" do
+    visit tools_path
+    assert_current_path new_session_path
   end
 
   test "should handle duplicate URLs during import" do
     sign_in_as(@user)
-    visit user_bookmarks_url(@user.username)
-
+    
     # Create a bookmark that will conflict with import
     @user.bookmarks.create!(
       url: "http://example.com/1",
@@ -175,8 +176,10 @@ class BookmarksTest < ApplicationSystemTestCase
       description: "Existing description"
     )
 
+    visit tools_path
+
     # Create import file with duplicate URL
-    file = Tempfile.new([ "bookmarks", ".json" ])
+    file = Tempfile.new(["bookmarks", ".json"])
     file.write(<<~JSON)
   [
     {
@@ -201,11 +204,14 @@ class BookmarksTest < ApplicationSystemTestCase
 
     # Attempt import
     attach_file find("input[type=file]")[:name], file.path
-    click_on "Import"
+    click_on "Import JSON"
 
     # Verify results
-    assert_text "Successfully imported 1 bookmark."
-    assert_text "Skipped 1 duplicate."
+    assert_text "Successfully imported 1 bookmark"
+    assert_text "Skipped 1 duplicate"
+
+    # Visit bookmarks page to verify the results
+    click_on "Back to bookmarks"
     assert_text "Example Site 2"  # New bookmark should be imported
     assert_text "Existing Site"   # Original bookmark should remain
 

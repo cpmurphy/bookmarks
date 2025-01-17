@@ -1,0 +1,11 @@
+.import-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: var(--background-alt);
+  border-radius: 0.5rem;
+}
+
+.import-section h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+} 

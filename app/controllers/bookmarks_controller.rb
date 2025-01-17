@@ -85,16 +85,6 @@ class BookmarksController < ApplicationController
     end
   end
 
-  def import
-    return redirect_to_bookmarks(alert: "Please select a file to import.") unless params[:file].present?
-
-    import_bookmarks
-  rescue JSON::ParserError
-    redirect_to_bookmarks(alert: "Invalid JSON file format.")
-  rescue StandardError => e
-    redirect_to_bookmarks(alert: "Import failed: #{e.message}")
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_owner
@@ -108,19 +98,5 @@ class BookmarksController < ApplicationController
     # Only allow a list of trusted parameters through.
     def bookmark_params
       params.require(:bookmark).permit(:url, :title, :description, :tags, :is_private)
-    end
-
-    def import_bookmarks
-      results = BookmarkImporter.new(params[:file], Current.user).import
-      redirect_to_bookmarks(notice: import_success_message(results))
-    end
-
-    def redirect_to_bookmarks(flash_message)
-      redirect_to user_bookmarks_path(Current.user.username), flash_message
-    end
-
-    def import_success_message(results)
-      "Successfully imported #{pluralize(results.imported, "bookmark")}. " \
-      "Skipped #{pluralize(results.skipped, "duplicate")}."
     end
 end
