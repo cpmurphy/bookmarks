@@ -126,4 +126,4 @@ class ToolsControllerTest < ActionDispatch::IntegrationTest
       tempfile.close!
     end
   end
-end 
+end

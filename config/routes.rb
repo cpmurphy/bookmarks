@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     resources :bookmarks, path: '' do
       collection do
         post :import
+        get :search
       end
     end
   end
@@ -25,8 +26,12 @@ Rails.application.routes.draw do
   resources :users, param: :username, only: [:show] do
     resources :bookmarks
   end
-  
+
   resource :tools, only: [:show] do
-    post :import, on: :collection
+    collection do
+      post :import
+      get :export
+      get :search
+    end
   end
 end

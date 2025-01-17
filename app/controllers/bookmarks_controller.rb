@@ -85,6 +85,14 @@ class BookmarksController < ApplicationController
     end
   end
 
+  def search
+    @bookmarks = Current.user.bookmarks
+      .where("title LIKE ?", "%#{params[:query]}%")
+      .limit(10)
+
+    render json: @bookmarks.map { |b| { id: b.id, title: b.title, url: b.url } }
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_owner

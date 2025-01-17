@@ -1,11 +1,90 @@
-.import-section {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background-color: var(--background-alt);
-  border-radius: 0.5rem;
+.tools-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--spacing-unit);
 }
 
-.import-section h2 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-} 
+.tools-section {
+  background: var(--card-background);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: calc(var(--spacing-unit) * 1.5);
+  margin-bottom: var(--spacing-unit);
+}
+
+.tools-section h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+}
+
+.tools-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-unit);
+  max-width: 600px;
+}
+
+.tools-form .button {
+  align-self: flex-start;
+}
+
+/* For mobile screens, let the button be full width */
+@media (max-width: 640px) {
+  .tools-form .button {
+    align-self: stretch;
+  }
+}
+
+.typeahead-container {
+  position: relative;
+}
+
+.typeahead-results {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+  display: block;
+}
+
+.typeahead-results.hidden {
+  display: none;
+}
+
+.typeahead-item {
+  padding: 0.75rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.typeahead-item:last-child {
+  border-bottom: none;
+}
+
+.typeahead-item:hover {
+  background: var(--background-color);
+}
+
+.typeahead-title {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.typeahead-meta {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .typeahead-meta {
+    color: #999;
+  }
+}

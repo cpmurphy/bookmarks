@@ -10,18 +10,47 @@
 
 <header class="page-header">
   <h1>Tools</h1>
-  
+
   <div class="actions">
     <%= button_to "Back to bookmarks", user_bookmarks_path(Current.user.username), method: :get, class: "button" %>
   </div>
 </header>
 
-<section class="import-section">
-  <h2>Import Bookmarks</h2>
-  <%= form_tag import_tools_path, multipart: true, class: "import-form", data: { turbo: false } do %>
-    <div class="file-input-wrapper">
-      <%= file_field_tag :file, class: "file-input", accept: "application/json" %>
-      <%= submit_tag "Import JSON", class: "button" %>
-    </div>
-  <% end %>
-</section> 
+<div class="tools-container">
+  <div class="tools-section">
+    <h2>Import Bookmarks</h2>
+    <%= form_tag import_tools_path, multipart: true, class: "tools-form" do %>
+      <div class="file-input-wrapper">
+        <%= file_field_tag :file, accept: "application/json" %>
+        <%= submit_tag "Import JSON", class: "button primary" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="tools-section">
+    <h2>Export Bookmarks</h2>
+    <%= form_tag export_tools_path(format: :json), method: :get, class: "tools-form" do %>
+      <div data-controller="typeahead"
+           data-username="<%= Current.user.username %>"
+           class="typeahead-container">
+        <div>
+          <%= label_tag :bookmark_search, "Start from bookmark (optional):" %>
+          <%= text_field_tag :bookmark_search, nil,
+              class: "search-input",
+              placeholder: "Start typing to search bookmarks...",
+              data: {
+                typeahead_target: "input",
+                action: "input->typeahead#search click@window->typeahead#clickOutside"
+              } %>
+          <%= hidden_field_tag :start_id, nil, data: { typeahead_target: "hiddenInput" } %>
+        </div>
+
+        <div data-typeahead-target="results" class="typeahead-results hidden">
+        </div>
+
+        <p class="help-text">Leave blank to export all bookmarks</p>
+      </div>
+      <%= submit_tag "Export as JSON", class: "button primary" %>
+    <% end %>
+  </div>
+</div>

@@ -168,7 +168,7 @@ class BookmarksTest < ApplicationSystemTestCase
 
   test "should handle duplicate URLs during import" do
     sign_in_as(@user)
-    
+
     # Create a bookmark that will conflict with import
     @user.bookmarks.create!(
       url: "http://example.com/1",
