@@ -119,7 +119,7 @@ class BookmarksTest < ApplicationSystemTestCase
     visit tools_path
 
     # Create a temporary file with bookmark data
-    file = Tempfile.new(["bookmarks", ".json"])
+    file = Tempfile.new([ "bookmarks", ".json" ])
     file.write(<<~JSON)
   [
     {
@@ -179,7 +179,7 @@ class BookmarksTest < ApplicationSystemTestCase
     visit tools_path
 
     # Create import file with duplicate URL
-    file = Tempfile.new(["bookmarks", ".json"])
+    file = Tempfile.new([ "bookmarks", ".json" ])
     file.write(<<~JSON)
   [
     {

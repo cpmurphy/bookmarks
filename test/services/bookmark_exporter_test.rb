@@ -69,7 +69,7 @@ class BookmarkExporterTest < ActiveSupport::TestCase
 
     assert_includes result_urls, @bookmark.url
     assert_includes result_urls, newer_bookmark.url
-    refute_includes result_urls, older_bookmark.url
+    assert_not_includes result_urls, older_bookmark.url
   end
 
   test "private bookmarks are marked as not shared" do

@@ -19,14 +19,14 @@ class ToolsControllerTest < ActionDispatch::IntegrationTest
   test "should import bookmarks from JSON file when signed in" do
     sign_in_as(@user)
     # Create a temp file with test JSON data
-    file = Tempfile.new(["bookmarks", ".json"])
-    file.write([{
+    file = Tempfile.new([ "bookmarks", ".json" ])
+    file.write([ {
       "href" => "https://example.com",
       "description" => "Example Site",
       "extended" => "A test bookmark",
       "tags" => "test,example",
       "time" => "2024-12-30T00:16:38Z"
-    }].to_json)
+    } ].to_json)
     file.rewind
 
     assert_difference("Bookmark.count") do
@@ -55,12 +55,12 @@ class ToolsControllerTest < ActionDispatch::IntegrationTest
     )
 
     # Try to import the same URL
-    file = Tempfile.new(["bookmarks", ".json"])
-    file.write([{
+    file = Tempfile.new([ "bookmarks", ".json" ])
+    file.write([ {
       "href" => "https://example.com",
       "description" => "Duplicate Site",
       "time" => "2024-12-30T00:16:38Z"
-    }].to_json)
+    } ].to_json)
     file.rewind
 
     sign_in_as(@user)
@@ -82,7 +82,7 @@ class ToolsControllerTest < ActionDispatch::IntegrationTest
 
   test "should handle invalid JSON file when signed in" do
     sign_in_as(@user)
-    file = Tempfile.new(["bookmarks", ".json"])
+    file = Tempfile.new([ "bookmarks", ".json" ])
     file.write("This is not JSON")
     file.rewind
 
@@ -95,7 +95,7 @@ class ToolsControllerTest < ActionDispatch::IntegrationTest
 
   test "should import multiple bookmarks when signed in" do
     sign_in_as(@user)
-    file = Tempfile.new(["bookmarks", ".json"])
+    file = Tempfile.new([ "bookmarks", ".json" ])
     file.write([
       {
         "href" => "https://example1.com",

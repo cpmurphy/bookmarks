@@ -1,7 +1,6 @@
 class ToolsController < ApplicationController
   include Authentication
   include ActionView::Helpers::TextHelper
-  require 'digest'
 
   def show
   end
