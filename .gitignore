@@ -35,5 +35,5 @@
 /config/master.key
 
 # ignore tar and bzipped tar image file
-/bookmarx.tar
-/bookmarx.tar.bz2
+/*.tar
+/*.tar.bz2
