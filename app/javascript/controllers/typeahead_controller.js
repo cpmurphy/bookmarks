@@ -17,7 +17,7 @@ export default class extends Controller {
     if (!query) {  // If input is empty
       this.hiddenInputTarget.value = ''
       this.hideResults()
-      
+
       // Trigger change event to update preview
       const changeEvent = new Event('change', { bubbles: true })
       this.hiddenInputTarget.dispatchEvent(changeEvent)
@@ -68,7 +68,7 @@ export default class extends Controller {
     this.inputTarget.value = title
     this.hiddenInputTarget.value = id
     this.hideResults()
-    
+
     // Dispatch a custom event when a selection is made
     const changeEvent = new Event('change', { bubbles: true })
     this.hiddenInputTarget.dispatchEvent(changeEvent)
@@ -86,7 +86,7 @@ export default class extends Controller {
     this.hiddenInputTarget.value = ''
     this.hideResults()
     this.updateClearButton()
-    
+
     // Trigger change event to update preview
     const changeEvent = new Event('change', { bubbles: true })
     this.hiddenInputTarget.dispatchEvent(changeEvent)

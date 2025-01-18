@@ -29,9 +29,9 @@ export default class extends Controller {
     fetch('/tools/preview_export')
       .then(response => response.json())
       .then(data => {
-        this.previewTarget.querySelector('.preview-items').innerHTML = 
+        this.previewTarget.querySelector('.preview-items').innerHTML =
           '<div class="preview-message">All bookmarks will be exported</div>'
-        this.countTarget.textContent = 
+        this.countTarget.textContent =
           `${data.total} bookmark${data.total === 1 ? '' : 's'} will be exported`
       })
       .catch(error => {
@@ -45,7 +45,7 @@ export default class extends Controller {
                  this.renderManyBookmarks(bookmarks)
 
     this.previewTarget.querySelector('.preview-items').innerHTML = items
-    this.countTarget.textContent = 
+    this.countTarget.textContent =
       `${total} bookmark${total === 1 ? '' : 's'} will be exported`
   }
 
@@ -73,4 +73,4 @@ export default class extends Controller {
       </div>
     `
   }
-} 
+}

@@ -32,7 +32,7 @@
     <%= form_tag export_tools_path(format: :json), method: :get, class: "tools-form" do %>
       <div class="export-selection" data-controller="export-preview">
         <div class="export-input">
-          <div data-controller="typeahead" 
+          <div data-controller="typeahead"
                data-username="<%= Current.user.username %>"
                class="typeahead-container">
             <div>
@@ -45,19 +45,19 @@
                       typeahead_target: "input",
                       action: "input->typeahead#search click@window->typeahead#clickOutside"
                     } %>
-                <button type="button" 
-                        class="clear-button hidden" 
+                <button type="button"
+                        class="clear-button hidden"
                         data-typeahead-target="clearButton"
                         data-action="click->typeahead#clear">×</button>
               </div>
-              <%= hidden_field_tag :start_id, nil, 
-                  data: { 
+              <%= hidden_field_tag :start_id, nil,
+                  data: {
                     typeahead_target: "hiddenInput",
                     export_preview_target: "startId",
                     action: "change->export-preview#updatePreview"
                   } %>
             </div>
-            
+
             <div data-typeahead-target="results" class="typeahead-results hidden">
             </div>
           </div>
