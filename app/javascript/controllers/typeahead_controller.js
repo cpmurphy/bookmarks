@@ -56,6 +56,10 @@ export default class extends Controller {
     this.inputTarget.value = title
     this.hiddenInputTarget.value = id
     this.hideResults()
+    
+    // Dispatch a custom event when a selection is made
+    const changeEvent = new Event('change', { bubbles: true })
+    this.hiddenInputTarget.dispatchEvent(changeEvent)
   }
 
   // Hide results when clicking outside

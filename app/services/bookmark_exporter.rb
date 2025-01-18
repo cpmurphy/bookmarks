@@ -23,6 +23,36 @@ class BookmarkExporter
     bookmarks.map { |bookmark| format_bookmark(bookmark) }
   end
 
+  def preview(start_id: nil)
+    bookmarks = if start_id.present?
+      start_bookmark = @user.bookmarks.find(start_id)
+      @user.bookmarks.where("created_at >= ?", start_bookmark.created_at)
+    else
+      @user.bookmarks
+    end
+
+    total = bookmarks.count
+
+    preview_bookmarks = if total <= 2
+      bookmarks.reorder(created_at: :desc)
+    else
+      [
+        bookmarks.reorder(created_at: :desc).first,
+        bookmarks.reorder(created_at: :asc).first
+      ]
+    end
+
+    {
+      total: total,
+      bookmarks: preview_bookmarks.map { |b|
+        {
+          title: b.title,
+          date: b.created_at.strftime("%Y-%m-%d")
+        }
+      }
+    }
+  end
+
   private
 
   def format_search_result(bookmark)

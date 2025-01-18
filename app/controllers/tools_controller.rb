@@ -33,6 +33,13 @@ class ToolsController < ApplicationController
     render json: exporter.search(params[:query])
   end
 
+  def preview_export
+    exporter = BookmarkExporter.new(Current.user)
+    preview_data = exporter.preview(start_id: params[:start_id])
+
+    render json: preview_data
+  end
+
   private
 
   def import_bookmarks

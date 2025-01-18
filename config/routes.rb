@@ -32,6 +32,7 @@ Rails.application.routes.draw do
       post :import
       get :export
       get :search
+      get :preview_export
     end
   end
 end
