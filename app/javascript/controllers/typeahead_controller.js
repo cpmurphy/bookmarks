@@ -1,16 +1,28 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "results", "hiddenInput"]
+  static targets = ["input", "results", "hiddenInput", "clearButton"]
 
   connect() {
     this.timeout = null
     this.hideResults()
+    this.updateClearButton()
   }
 
   search() {
     clearTimeout(this.timeout)
     const query = this.inputTarget.value
+    this.updateClearButton()
+
+    if (!query) {  // If input is empty
+      this.hiddenInputTarget.value = ''
+      this.hideResults()
+      
+      // Trigger change event to update preview
+      const changeEvent = new Event('change', { bubbles: true })
+      this.hiddenInputTarget.dispatchEvent(changeEvent)
+      return
+    }
 
     if (query.length < 2) {
       this.hideResults()
@@ -66,6 +78,25 @@ export default class extends Controller {
   clickOutside(event) {
     if (!this.element.contains(event.target)) {
       this.hideResults()
+    }
+  }
+
+  clear() {
+    this.inputTarget.value = ''
+    this.hiddenInputTarget.value = ''
+    this.hideResults()
+    this.updateClearButton()
+    
+    // Trigger change event to update preview
+    const changeEvent = new Event('change', { bubbles: true })
+    this.hiddenInputTarget.dispatchEvent(changeEvent)
+  }
+
+  updateClearButton() {
+    if (this.inputTarget.value) {
+      this.clearButtonTarget.classList.remove('hidden')
+    } else {
+      this.clearButtonTarget.classList.add('hidden')
     }
   }
 }

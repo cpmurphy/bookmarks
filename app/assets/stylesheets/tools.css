@@ -172,3 +172,42 @@
   width: 100%;
   box-sizing: border-box;
 }
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.clear-button {
+  position: absolute;
+  right: 8px;
+  padding: 4px 8px;
+  background: var(--background-color);
+  border: none;
+  border-radius: 50%;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 1px var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.clear-button:hover {
+  color: var(--text-color);
+  background: var(--card-background);
+  box-shadow: 0 0 0 1px var(--text-muted);
+}
+
+.clear-button.hidden {
+  display: none;
+}
+
+/* Ensure input padding accounts for button */
+.search-input {
+  padding-right: 36px;
+}

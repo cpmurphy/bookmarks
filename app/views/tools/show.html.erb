@@ -37,13 +37,19 @@
                class="typeahead-container">
             <div>
               <%= label_tag :bookmark_search, "Start from bookmark (optional):" %>
-              <%= text_field_tag :bookmark_search, nil,
-                  class: "search-input",
-                  placeholder: "Start typing to search bookmarks...",
-                  data: {
-                    typeahead_target: "input",
-                    action: "input->typeahead#search click@window->typeahead#clickOutside"
-                  } %>
+              <div class="search-input-wrapper">
+                <%= text_field_tag :bookmark_search, nil,
+                    class: "search-input",
+                    placeholder: "Start typing to search bookmarks...",
+                    data: {
+                      typeahead_target: "input",
+                      action: "input->typeahead#search click@window->typeahead#clickOutside"
+                    } %>
+                <button type="button" 
+                        class="clear-button hidden" 
+                        data-typeahead-target="clearButton"
+                        data-action="click->typeahead#clear">×</button>
+              </div>
               <%= hidden_field_tag :start_id, nil, 
                   data: { 
                     typeahead_target: "hiddenInput",
