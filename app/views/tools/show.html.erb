@@ -29,51 +29,58 @@
 
   <div class="tools-section">
     <h2>Export Bookmarks</h2>
-    <%= form_tag export_tools_path(format: :json), method: :get, class: "tools-form" do %>
-      <div class="export-selection" data-controller="export-preview">
-        <div class="export-input">
-          <div data-controller="typeahead"
-               data-username="<%= Current.user.username %>"
-               class="typeahead-container">
-            <div>
-              <%= label_tag :bookmark_search, "Start from bookmark (optional):" %>
-              <div class="search-input-wrapper">
-                <%= text_field_tag :bookmark_search, nil,
-                    class: "search-input",
-                    placeholder: "Start typing to search bookmarks...",
-                    data: {
-                      typeahead_target: "input",
-                      action: "input->typeahead#search click@window->typeahead#clickOutside"
-                    } %>
-                <button type="button"
-                        class="clear-button hidden"
-                        data-typeahead-target="clearButton"
-                        data-action="click->typeahead#clear">×</button>
-              </div>
-              <%= hidden_field_tag :start_id, nil,
+    <div class="export-selection" data-controller="export-preview">
+      <div class="export-input">
+        <div data-controller="typeahead"
+             data-username="<%= Current.user.username %>"
+             class="typeahead-container">
+          <div>
+            <%= label_tag :bookmark_search, "Start from bookmark (optional):" %>
+            <div class="search-input-wrapper">
+              <%= text_field_tag :bookmark_search, nil,
+                  class: "search-input",
+                  placeholder: "Start typing to search bookmarks...",
                   data: {
-                    typeahead_target: "hiddenInput",
-                    export_preview_target: "startId",
-                    action: "change->export-preview#updatePreview"
+                    typeahead_target: "input",
+                    action: "input->typeahead#search click@window->typeahead#clickOutside"
                   } %>
+              <button type="button"
+                      class="clear-button hidden"
+                      data-typeahead-target="clearButton"
+                      data-action="click->typeahead#clear">×</button>
             </div>
-
-            <div data-typeahead-target="results" class="typeahead-results hidden">
-            </div>
+            <%= hidden_field_tag :start_id, nil,
+                data: {
+                  typeahead_target: "hiddenInput",
+                  export_preview_target: "startId",
+                  action: "change->export-preview#updatePreview"
+                } %>
           </div>
-        </div>
 
-        <div class="export-preview" data-export-preview-target="preview">
-          <div class="preview-content">
-            <div class="preview-items">
-              <div class="preview-message">All bookmarks will be exported</div>
-            </div>
-            <div class="preview-count" data-export-preview-target="count"></div>
+          <div data-typeahead-target="results" class="typeahead-results hidden">
           </div>
         </div>
       </div>
 
-      <%= submit_tag "Export as JSON", class: "button primary" %>
-    <% end %>
+      <div class="export-preview" data-export-preview-target="preview">
+        <div class="preview-content">
+          <div class="preview-items">
+            <div class="preview-message">All bookmarks will be exported</div>
+          </div>
+          <div class="preview-count" data-export-preview-target="count"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="export-buttons">
+      <%= button_to "Export as JSON", export_tools_path(format: :json),
+          method: :get,
+          params: { start_id: nil },
+          class: "button primary",
+          form: { data: { "export-preview-target": "form" } } %>
+      <%= button_to "Export as HTML", export_tools_path(format: :html),
+          method: :get,
+          class: "button primary" %>
+    </div>
   </div>
 </div>

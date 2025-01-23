@@ -30,13 +30,18 @@ class ToolsController < ApplicationController
 
   def export
     exporter = BookmarkExporter.new(Current.user)
-    bookmarks_data = exporter.export(start_id: params[:start_id])
 
     respond_to do |format|
       format.json do
+        bookmarks_data = exporter.export(start_id: params[:start_id])
         send_data bookmarks_data.to_json,
           filename: "bookmarks_export_#{Time.current.strftime("%Y%m%d")}.json",
           type: :json
+      end
+      format.html do
+        send_data exporter.export_netscape,
+          filename: "bookmarks_export_#{Time.current.strftime("%Y%m%d")}.html",
+          type: :html
       end
     end
   end

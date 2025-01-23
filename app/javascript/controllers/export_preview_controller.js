@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["preview", "count", "startId"]
+  static targets = ["preview", "count", "startId", "form"]
 
   connect() {
     this.updatePreview()
@@ -9,6 +9,9 @@ export default class extends Controller {
 
   updatePreview() {
     const startId = this.startIdTarget.value
+    if (this.hasFormTarget) {
+      this.formTarget.querySelector('input[name="start_id"]').value = startId
+    }
     if (!startId) {
       this.showAllBookmarksMessage()
       return

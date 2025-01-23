@@ -221,4 +221,81 @@ class BookmarkExporterTest < ActiveSupport::TestCase
     assert_includes results[:bookmarks].map { |b| b[:title] }, middle.title
     assert_not_includes results[:bookmarks].map { |b| b[:title] }, older.title
   end
+
+  test "exports bookmarks in Netscape format" do
+    test_user = User.create!(
+      email_address: "test@example.com",
+      username: "test_user",
+      password_digest: "dummy"
+    )
+    exporter = BookmarkExporter.new(test_user)
+
+    bookmark = test_user.bookmarks.create!(
+      url: "http://example.com/test",
+      title: "Test Bookmark",
+      description: "Test Description",
+      tags: "test,example",
+      created_at: Time.zone.at(1577836800)  # 2020-01-01 00:00:00 UTC
+    )
+
+    html = exporter.export_netscape
+    doc = Nokogiri::HTML(html)
+
+    # Check DOCTYPE
+    assert_includes html, "DOCTYPE NETSCAPE-Bookmark-file-1"
+
+    # Find the bookmark link
+    link = doc.at_css("a")
+    assert_equal bookmark.url, link["href"]
+    assert_equal bookmark.title, link.text
+    assert_equal bookmark.description, link["description"]
+    assert_equal bookmark.tags, link["tags"]
+    assert_equal bookmark.created_at.to_i.to_s, link["add_date"]
+  end
+
+  test "exports multiple bookmarks in Netscape format" do
+    test_user = User.create!(
+      email_address: "test@example.com",
+      username: "test_user",
+      password_digest: "dummy"
+    )
+    exporter = BookmarkExporter.new(test_user)
+
+    test_user.bookmarks.create!(
+      url: "http://example.com/1",
+      title: "First Bookmark"
+    )
+    test_user.bookmarks.create!(
+      url: "http://example.com/2",
+      title: "Second Bookmark"
+    )
+
+    html = exporter.export_netscape
+    doc = Nokogiri::HTML(html)
+
+    links = doc.css("a")
+    assert_equal 2, links.length
+    assert_equal [ "First Bookmark", "Second Bookmark" ], links.map(&:text).sort
+  end
+
+  test "handles missing optional attributes in Netscape export" do
+    test_user = User.create!(
+      email_address: "test@example.com",
+      username: "test_user",
+      password_digest: "dummy"
+    )
+    exporter = BookmarkExporter.new(test_user)
+
+    test_user.bookmarks.create!(
+      url: "http://example.com/minimal",
+      title: "Minimal Bookmark"
+    )
+
+    html = exporter.export_netscape
+    doc = Nokogiri::HTML(html)
+
+    link = doc.at_css("a")
+    assert_empty link["description"]
+    assert_empty link["tags"]
+  end
 end
