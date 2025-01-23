@@ -21,8 +21,8 @@
     <h2>Import Bookmarks</h2>
     <%= form_tag import_tools_path, multipart: true, class: "tools-form" do %>
       <div class="file-input-wrapper">
-        <%= file_field_tag :file, accept: "application/json" %>
-        <%= submit_tag "Import JSON", class: "button primary" %>
+        <%= file_field_tag :file, accept: "application/json,text/html" %>
+        <%= submit_tag "Import", class: "button primary" %>
       </div>
     <% end %>
   </div>

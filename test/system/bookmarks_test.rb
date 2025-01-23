@@ -144,7 +144,7 @@ class BookmarksTest < ApplicationSystemTestCase
 
     # Attach and submit the file
     attach_file find("input[type=file]")[:name], file.path
-    click_on "Import JSON"
+    click_on "Import"
 
     # Verify the bookmarks were imported
     assert_text "Successfully imported 2 bookmarks"
@@ -204,7 +204,7 @@ class BookmarksTest < ApplicationSystemTestCase
 
     # Attempt import
     attach_file find("input[type=file]")[:name], file.path
-    click_on "Import JSON"
+    click_on "Import"
 
     # Verify results
     assert_text "Successfully imported 1 bookmark"
