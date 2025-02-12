@@ -1,10 +1,16 @@
 require "application_system_test_case"
+require "random/formatter"
 
 class BookmarksTest < ApplicationSystemTestCase
   setup do
     @bookmark = bookmarks(:public_bookmark)
     @private_bookmark = bookmarks(:private_bookmark)
     @user = users(:first_user)
+  end
+
+  def random_string
+    @prng ||= Random.new
+    @prng.hex(10)
   end
 
   test "visiting the index" do
@@ -119,7 +125,8 @@ class BookmarksTest < ApplicationSystemTestCase
     visit tools_path
 
     # Create a temporary file with bookmark data
-    file = Tempfile.new([ "bookmarks", ".json" ])
+    file_path = "tmp/bookmarks-#{$$}#{random_string}.json"
+    file = File.open(file_path, "w")
     file.write(<<~JSON)
   [
     {
@@ -140,10 +147,10 @@ class BookmarksTest < ApplicationSystemTestCase
     }
   ]
     JSON
-    file.rewind
+    file.close
 
     # Attach and submit the file
-    attach_file find("input[type=file]")[:name], file.path
+    attach_file find("input[type=file]")[:name], file_path
     click_on "Import"
 
     # Verify the bookmarks were imported
@@ -157,8 +164,7 @@ class BookmarksTest < ApplicationSystemTestCase
     assert_text "System testing import bookmark 2"
 
     # Clean up
-    file.close
-    file.unlink
+    File.unlink(file_path)
   end
 
   test "should not allow access to tools when not signed in" do
@@ -179,7 +185,8 @@ class BookmarksTest < ApplicationSystemTestCase
     visit tools_path
 
     # Create import file with duplicate URL
-    file = Tempfile.new([ "bookmarks", ".json" ])
+    file_path = "tmp/bookmarks-#{$$}#{random_string}.json"
+    file = File.open(file_path, "w")
     file.write(<<~JSON)
   [
     {
@@ -200,10 +207,10 @@ class BookmarksTest < ApplicationSystemTestCase
     }
   ]
     JSON
-    file.rewind
+    file.close
 
     # Attempt import
-    attach_file find("input[type=file]")[:name], file.path
+    attach_file find("input[type=file]")[:name], file_path
     click_on "Import"
 
     # Verify results
@@ -216,8 +223,7 @@ class BookmarksTest < ApplicationSystemTestCase
     assert_text "Existing Site"   # Original bookmark should remain
 
     # Clean up
-    file.close
-    file.unlink
+    File.unlink(file_path)
   end
 
   private
