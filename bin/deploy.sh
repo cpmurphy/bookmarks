@@ -20,6 +20,7 @@ RAILS_MASTER_KEY=$(cat "${SCRIPT_DIR}"/../config/master.key)
 export RAILS_MASTER_KEY
 
 rake
+bin/rails db:test:prepare test:system
 
 rake -f Rakefile.mine docker_build
 
