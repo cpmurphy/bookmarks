@@ -98,6 +98,7 @@ class BookmarksTest < ApplicationSystemTestCase
     visit user_bookmarks_url(@user.username)
 
     fill_in "query", with: "nonexistent"
+    sleep 0.1 # fudge for slow github actions
 
     assert_no_selector ".bookmark-card"
     assert_text "No bookmarks found"
