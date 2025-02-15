@@ -59,6 +59,7 @@ docker rm "${APP_NAME}" || true
 # listens to port 3001 on the host
 docker run -d --name "${APP_NAME}" -p 3001:3000 \
   -e RACK_ENV=production \
+  --restart=unless-stopped \
   -e RAILS_MASTER_KEY=$RAILS_MASTER_KEY \
   -v "${DEPLOY_DIR}/storage:/rails/storage" \
   -v "${DEPLOY_DIR}/tmp:/rails/tmp" \
