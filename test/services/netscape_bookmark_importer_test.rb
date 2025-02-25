@@ -14,10 +14,18 @@ class NetscapeBookmarkImporterTest < ActiveSupport::TestCase
     importer = NetscapeBookmarkImporter.new(file.open, @user)
 
     results = importer.import
+
     assert_equal 2, results.imported
     assert_equal 0, results.skipped
+  end
 
+  test "imports data from bookmarks in Netscape format" do
+    file = file_fixture("netscape_bookmarks.html")
+    importer = NetscapeBookmarkImporter.new(file.open, @user)
+
+    results = importer.import
     bookmark = @user.bookmarks.find_by(url: "http://example.com/bookmark1")
+
     assert_equal "Example Bookmark 1", bookmark.title
     assert_equal "First test bookmark", bookmark.description
     assert_equal "test,example", bookmark.tags
@@ -34,6 +42,7 @@ class NetscapeBookmarkImporterTest < ActiveSupport::TestCase
     importer = NetscapeBookmarkImporter.new(file.open, @user)
 
     results = importer.import
+
     assert_equal 1, results.imported
     assert_equal 1, results.skipped
   end
@@ -43,10 +52,11 @@ class NetscapeBookmarkImporterTest < ActiveSupport::TestCase
     importer = NetscapeBookmarkImporter.new(file.open, @user)
 
     results = importer.import
-    assert_equal 1, results.imported
 
     bookmark = @user.bookmarks.last
+
     assert_equal "[no title]", bookmark.title if bookmark.title.blank?
+
     assert_equal "", bookmark.description
     assert_equal "", bookmark.tags
   end

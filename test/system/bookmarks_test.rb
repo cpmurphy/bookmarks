@@ -15,11 +15,13 @@ class BookmarksTest < ApplicationSystemTestCase
 
   test "visiting the index" do
     visit user_bookmarks_url(@user.username)
+
     assert_selector "h1", text: "Bookmarks"
   end
 
   test "should show public bookmarks when not signed in" do
     visit user_bookmarks_url(@user.username)
+
     assert_text @bookmark.title
     assert_no_text @private_bookmark.title
   end
@@ -27,6 +29,7 @@ class BookmarksTest < ApplicationSystemTestCase
   test "should show all bookmarks when signed in" do
     sign_in_as(@user)
     visit user_bookmarks_url(@user.username)
+
     assert_text @bookmark.title
     assert_text @private_bookmark.title
   end
@@ -75,6 +78,7 @@ class BookmarksTest < ApplicationSystemTestCase
 
   test "should not show edit/delete buttons when not signed in" do
     visit user_bookmarks_url(@user.username)
+
     assert_no_text "Edit"
     assert_no_text "Delete"
     assert_no_text "New bookmark"
@@ -82,6 +86,7 @@ class BookmarksTest < ApplicationSystemTestCase
 
   test "should redirect to sign in when trying to create bookmark" do
     visit new_user_bookmark_url(@user.username)
+
     assert_current_path new_session_path
   end
 
@@ -121,6 +126,7 @@ class BookmarksTest < ApplicationSystemTestCase
     assert_selector ".bookmark-card", text: "Private Site"
   end
 
+  # rubocop:disable Minitest/MultipleAssertions
   test "should import bookmarks when signed in" do
     sign_in_as(@user)
     visit tools_path
@@ -159,6 +165,7 @@ class BookmarksTest < ApplicationSystemTestCase
 
     # Visit bookmarks page to verify the imported bookmarks
     click_on "Back to bookmarks"
+
     assert_text "Example Site 1"
     assert_text "Example Site 2"
     assert_text "System testing import bookmark 1"
@@ -167,12 +174,15 @@ class BookmarksTest < ApplicationSystemTestCase
     # Clean up
     File.unlink(file_path)
   end
+  # rubocop:enable Minitest/MultipleAssertions
 
   test "should not allow access to tools when not signed in" do
     visit tools_path
+
     assert_current_path new_session_path
   end
 
+  # rubocop:disable Minitest/MultipleAssertions
   test "should handle duplicate URLs during import" do
     sign_in_as(@user)
 
@@ -220,12 +230,14 @@ class BookmarksTest < ApplicationSystemTestCase
 
     # Visit bookmarks page to verify the results
     click_on "Back to bookmarks"
+
     assert_text "Example Site 2"  # New bookmark should be imported
     assert_text "Existing Site"   # Original bookmark should remain
 
     # Clean up
     File.unlink(file_path)
   end
+  # rubocop:enable Minitest/MultipleAssertions
 
   private
 
