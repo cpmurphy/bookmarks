@@ -9,6 +9,7 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
 
   test "should get index" do
     get user_bookmarks_url(@user.username)
+
     assert_response :success
     assert_includes @response.body, @bookmark.title
     assert_not_includes @response.body, @private_bookmark.title
@@ -17,6 +18,7 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
   test "should get index with all bookmarks when signed in" do
     sign_in_as(@user)
     get user_bookmarks_url(@user.username)
+
     assert_response :success
     assert_includes @response.body, @bookmark.title
     assert_includes @response.body, @private_bookmark.title
@@ -25,11 +27,13 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
   test "should get new when signed in" do
     sign_in_as(@user)
     get new_user_bookmark_path(@user.username)
+
     assert_response :success
   end
 
   test "should not get new when not signed in" do
     get new_user_bookmark_path(@user.username)
+
     assert_redirected_to new_session_path
   end
 
@@ -50,6 +54,7 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
   test "should get edit" do
     sign_in_as(@user)
     get edit_user_bookmark_path(@user.username, @bookmark)
+
     assert_response :success
   end
 
@@ -64,6 +69,7 @@ class BookmarksControllerTest < ActionDispatch::IntegrationTest
         url: @bookmark.url
       }
     }
+
     assert_redirected_to user_bookmarks_path(@user.username)
   end
 

@@ -5,6 +5,7 @@ class AuthenticationTest < ApplicationSystemTestCase
     @user = users(:first_user)
   end
 
+  # rubocop:disable Minitest/MultipleAssertions
   test "signing in and out" do
     # First sign in
     visit root_url
@@ -25,10 +26,12 @@ class AuthenticationTest < ApplicationSystemTestCase
     # Verify we're actually signed out by checking for sign in button
     assert_selector "input[value='Sign in']"
   end
+  # rubocop:enable Minitest/MultipleAssertions
 
   test "cannot access private content when signed out" do
     # First sign in
     sign_in_as(@user)
+
     assert_current_path user_bookmarks_path(@user.username)
 
     # Sign out
@@ -36,6 +39,7 @@ class AuthenticationTest < ApplicationSystemTestCase
 
     # Try to access private bookmarks
     visit user_bookmarks_path(@user.username)
+
     assert_no_text "Private Site"
   end
 end

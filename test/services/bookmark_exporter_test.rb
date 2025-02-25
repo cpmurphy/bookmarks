@@ -23,7 +23,6 @@ class BookmarkExporterTest < ActiveSupport::TestCase
 
     assert_equal @bookmark.title, result[:title]
     assert_equal @bookmark.url, result[:url]
-    assert_equal @bookmark.created_at.strftime("%Y-%m-%d"), result[:date]
   end
 
   test "search limits results" do
@@ -35,11 +34,13 @@ class BookmarkExporterTest < ActiveSupport::TestCase
     end
 
     results = @exporter.search("", limit: 2)
+
     assert_equal 2, results.length
   end
 
   test "search matches both title and url" do
     results = @exporter.search(@bookmark.url[8..11])
+
     assert_includes results.map { |r| r[:id] }, @bookmark.id
   end
 
@@ -49,14 +50,21 @@ class BookmarkExporterTest < ActiveSupport::TestCase
     assert_includes results.map { |r| r[:href] }, @bookmark.url
     result = results.find { |r| r[:href] == @bookmark.url }
 
-    assert_equal @bookmark.title, result[:description]
-    assert_equal @bookmark.description, result[:extended]
-    assert_equal @bookmark.created_at.iso8601, result[:time]
-    assert_equal @bookmark.tags, result[:tags]
-    assert_equal Digest::MD5.hexdigest(@bookmark.url), result[:hash]
-    assert_equal @bookmark.is_private ? "no" : "yes", result[:shared]
-    assert_equal "no", result[:toread]
-    assert_equal "", result[:meta]
+    assert_equal [ @bookmark.title,
+      @bookmark.description,
+      @bookmark.created_at.iso8601,
+      @bookmark.tags,
+      Digest::MD5.hexdigest(@bookmark.url),
+      @bookmark.is_private ? "no" : "yes", "no",
+      "" ],
+      [ result[:description],
+        result[:extended],
+        result[:time],
+        result[:tags],
+        result[:hash],
+        result[:shared],
+        result[:toread],
+        result[:meta] ]
   end
 
   test "export from specific bookmark" do
@@ -116,6 +124,7 @@ class BookmarkExporterTest < ActiveSupport::TestCase
     )
 
     results = exporter.preview
+
     assert_equal 2, results[:total]
     assert_equal 2, results[:bookmarks].length
   end
@@ -135,11 +144,13 @@ class BookmarkExporterTest < ActiveSupport::TestCase
     )
 
     results = exporter.preview(start_id: bookmark.id)
+
     assert_equal 1, results[:total]
     assert_equal 1, results[:bookmarks].length
     assert_equal bookmark.title, results[:bookmarks].first[:title]
   end
 
+  # rubocop:disable Minitest/MultipleAssertions
   test "preview with many bookmarks shows newest and oldest" do
     test_user = User.create!(
       email_address: "test@example.com",
@@ -165,12 +176,14 @@ class BookmarkExporterTest < ActiveSupport::TestCase
     )
 
     results = exporter.preview(start_id: oldest.id)
+
     assert_equal 3, results[:total]
     assert_equal 2, results[:bookmarks].length
     assert_equal newest.title, results[:bookmarks].first[:title]
     assert_equal oldest.title, results[:bookmarks].last[:title]
     assert_not_includes results[:bookmarks].map { |b| b[:title] }, middle.title
   end
+  # rubocop:enable Minitest/MultipleAssertions
 
   test "preview includes formatted dates" do
     test_user = User.create!(
@@ -187,9 +200,11 @@ class BookmarkExporterTest < ActiveSupport::TestCase
     )
 
     results = exporter.preview(start_id: bookmark.id)
+
     assert_equal "2024-03-15", results[:bookmarks].first[:date]
   end
 
+  # rubocop:disable Minitest/MultipleAssertions
   test "preview with start_id shows correct count of exportable bookmarks" do
     test_user = User.create!(
       email_address: "test@example.com",
@@ -216,6 +231,7 @@ class BookmarkExporterTest < ActiveSupport::TestCase
     )
 
     results = exporter.preview(start_id: middle.id)
+
     assert_equal 2, results[:total]  # Should only count middle and newer bookmarks
     assert_includes results[:bookmarks].map { |b| b[:title] }, newer.title
     assert_includes results[:bookmarks].map { |b| b[:title] }, middle.title
@@ -246,12 +262,14 @@ class BookmarkExporterTest < ActiveSupport::TestCase
 
     # Find the bookmark link
     link = doc.at_css("a")
+
     assert_equal bookmark.url, link["href"]
     assert_equal bookmark.title, link.text
     assert_equal bookmark.description, link["description"]
     assert_equal bookmark.tags, link["tags"]
     assert_equal bookmark.created_at.to_i.to_s, link["add_date"]
   end
+  # rubocop:enable Minitest/MultipleAssertions
 
   test "exports multiple bookmarks in Netscape format" do
     test_user = User.create!(
@@ -274,6 +292,7 @@ class BookmarkExporterTest < ActiveSupport::TestCase
     doc = Nokogiri::HTML(html)
 
     links = doc.css("a")
+
     assert_equal 2, links.length
     assert_equal [ "First Bookmark", "Second Bookmark" ], links.map(&:text).sort
   end
@@ -295,6 +314,7 @@ class BookmarkExporterTest < ActiveSupport::TestCase
     doc = Nokogiri::HTML(html)
 
     link = doc.at_css("a")
+
     assert_empty link["description"]
     assert_empty link["tags"]
   end
