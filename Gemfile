@@ -2,16 +2,12 @@ source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 rails_version = "~> 8.0.1"
-gem "actioncable", rails_version
 # gem "actionmailbox", rails_version
 # gem "actionmailer", rails_version
 gem "actionpack", rails_version
-gem "actiontext", rails_version
 gem "actionview", rails_version
-gem "activejob", rails_version
 gem "activemodel", rails_version
 gem "activerecord", rails_version
-gem "activestorage", rails_version
 gem "activesupport", rails_version
 gem "railties", rails_version
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
@@ -35,10 +31,8 @@ gem "bcrypt", "~> 3.1.7"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
-# Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
+# Use the database-backed adapter for Rails.cache
 gem "solid_cache"
-gem "solid_queue"
-gem "solid_cable"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
