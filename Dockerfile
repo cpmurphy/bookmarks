@@ -73,6 +73,9 @@ VOLUME ["/rails/storage", "/rails/tmp", "/rails/db"]
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
+# Ensure Thruster doesn't use port 80
+ENV HTTP_PORT=8000
+
 # Start server via Thruster by default, this can be overwritten at runtime
-EXPOSE 80
+EXPOSE 3000
 CMD ["./bin/thrust", "./bin/rails", "server"]
