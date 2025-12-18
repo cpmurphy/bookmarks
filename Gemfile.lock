@@ -96,8 +96,7 @@ GEM
       nokogiri (>= 1.12.0)
     matrix (0.4.3)
     mini_mime (1.1.5)
-    minitest (5.26.2)
-      prism (~> 1.5)
+    minitest (5.27.0)
     msgpack (1.8.0)
     nio4r (2.7.5)
     nokogiri (1.18.10-aarch64-linux-gnu)
@@ -267,6 +266,7 @@ DEPENDENCIES
   debug
   importmap-rails
   jbuilder
+  minitest (~> 5.0)
   propshaft
   puma (>= 5.0)
   railties (~> 8.0.1)
