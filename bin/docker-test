@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Build the test image
-docker build -t bookmarx-test -f Dockerfile.test .
+docker build -t bookmarks-test -f Dockerfile.test .
 
 # Run the tests
 docker run --rm \
   -e RAILS_ENV=test \
-  bookmarx-test \
+  bookmarks-test \
   bash -c "bin/rails db:test:prepare && bin/rails test:system"

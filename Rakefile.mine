@@ -3,11 +3,11 @@ require 'rake/testtask'
 desc 'Build Docker image'
 task :docker_build do
   puts "Building Docker image..."
-  sh "docker build -t bookmarx ."
+  sh "docker build -t bookmarks ."
 end
 
 desc 'Run Docker container'
 task :docker_run do
   puts "Running Docker container..."
-  sh "docker run -p 3000:3000 bookmarx"
+  sh "docker run -p 3000:3000 bookmarks"
 end
