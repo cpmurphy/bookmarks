@@ -27,6 +27,9 @@ rake -f Rakefile.mine docker_build
 rm -f "${APP_NAME}".tar
 rm -f "${APP_NAME}".tar.bz2
 
+rm -f bookmarx.tar
+rm -f bookmarx.tar.bz2
+
 # save the docker image to a tar file
 docker save -o "${APP_NAME}".tar "${APP_NAME}"
 
@@ -50,11 +53,13 @@ mkdir -p storage
 mkdir -p tmp
 chown rails:rails storage tmp
 rm -f "${APP_NAME}".tar
+rm -f bookmarx.tar
 bunzip2 -f "${APP_NAME}".tar.bz2
 docker load -i "${APP_NAME}".tar
 # stop any old "${APP_NAME}" container
 docker stop "${APP_NAME}" || true
-docker rm "${APP_NAME}" || true
+docker stop bookmarx || true
+docker rm bookmarx || true
 # now run the image using regular docker
 # listens to port 3001 on the host
 docker run -d --name "${APP_NAME}" -p 3001:3000 \
