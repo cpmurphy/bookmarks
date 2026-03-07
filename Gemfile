@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-rails_version = "~> 8.0.1"
+rails_version = "~> 8.1.2"
 # gem "actionmailbox", rails_version
 # gem "actionmailer", rails_version
 gem "actionpack", rails_version
