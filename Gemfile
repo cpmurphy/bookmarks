@@ -34,7 +34,7 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 # json 3.0 made JSON.parse options keyword-only. Rails 8.1.3.1 still calls
 # JSON.parse(json, options) with a positional Hash, which breaks signed cookie
 # and session decoding (ArgumentError in Authentication#find_session_by_cookie).
-gem "json", "< 3"
+gem "json", "< 4"
 
 # Use the database-backed adapter for Rails.cache
 gem "solid_cache"
