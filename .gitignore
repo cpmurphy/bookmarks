@@ -37,3 +37,5 @@
 # ignore tar and bzipped tar image file
 /*.tar
 /*.tar.bz2
+
+config/deploy_env.sh
