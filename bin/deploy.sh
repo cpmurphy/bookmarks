@@ -48,7 +48,7 @@ set -x
 cd "${DEPLOY_DIR}"
 mkdir -p storage
 mkdir -p tmp
-chown rails:rails storage tmp
+chown apps:apps storage tmp
 rm -f "${APP_NAME}".tar
 bunzip2 -f "${APP_NAME}".tar.bz2
 docker load -i "${APP_NAME}".tar
