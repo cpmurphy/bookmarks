@@ -56,7 +56,7 @@ docker load -i "${APP_NAME}".tar
 docker stop "${APP_NAME}" || true
 # now run the image using regular docker
 # listens to port 3001 on the host
-docker run -d --name "${APP_NAME}" -p 3001:3000 \
+docker run -d --name "${APP_NAME}" -p 127.0.0.1:3001:3000 \
   -e RACK_ENV=production \
   --restart=unless-stopped \
   --userns=keep-id:uid=1000,gid=1000 \
