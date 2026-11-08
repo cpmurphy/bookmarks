@@ -59,6 +59,7 @@ docker stop "${APP_NAME}" || true
 docker run -d --name "${APP_NAME}" -p 3001:3000 \
   -e RACK_ENV=production \
   --restart=unless-stopped \
+  --userns=keep-id:uid=1000,gid=1000 \
   -e RAILS_MASTER_KEY=$RAILS_MASTER_KEY \
   -v "${DEPLOY_DIR}/storage:/rails/storage" \
   -v "${DEPLOY_DIR}/tmp:/rails/tmp" \
