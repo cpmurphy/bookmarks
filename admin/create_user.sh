@@ -88,4 +88,4 @@ EOF
 echo "Creating user '$USERNAME' with email '$EMAIL' and a password"
 
 # Execute the Rails command on the remote server
-ssh -t "${DEPLOY_USER}"@"${DEPLOY_HOST}" "cd ${DEPLOY_DIR} && docker exec -i ${APP_NAME} bin/rails runner '$RAILS_CMD'"
+ssh -t "${DEPLOY_USER}"@"${DEPLOY_HOST}" "cd ${DEPLOY_DIR} && podman exec -i ${APP_NAME} bin/rails runner '$RAILS_CMD'"

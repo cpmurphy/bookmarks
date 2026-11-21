@@ -25,16 +25,16 @@ CMD=${1:-bash}
 
 case $CMD in
   bash)
-    ssh -t "${DEPLOY_USER}"@"${DEPLOY_HOST}" "cd ${DEPLOY_DIR} && docker exec -it ${APP_NAME} bash"
+    ssh -t "${DEPLOY_USER}"@"${DEPLOY_HOST}" "cd ${DEPLOY_DIR} && podman exec -it ${APP_NAME} bash"
     ;;
   console)
-    ssh -t "${DEPLOY_USER}"@"${DEPLOY_HOST}" "cd ${DEPLOY_DIR} && docker exec -it ${APP_NAME} bin/rails console"
+    ssh -t "${DEPLOY_USER}"@"${DEPLOY_HOST}" "cd ${DEPLOY_DIR} && podman exec -it ${APP_NAME} bin/rails console"
     ;;
   dbconsole)
-    ssh -t "${DEPLOY_USER}"@"${DEPLOY_HOST}" "cd ${DEPLOY_DIR} && docker exec -it ${APP_NAME} bin/rails dbconsole"
+    ssh -t "${DEPLOY_USER}"@"${DEPLOY_HOST}" "cd ${DEPLOY_DIR} && podman exec -it ${APP_NAME} bin/rails dbconsole"
     ;;
   logs)
-    ssh -t "${DEPLOY_USER}"@"${DEPLOY_HOST}" "cd ${DEPLOY_DIR} && docker logs -f ${APP_NAME}"
+    ssh -t "${DEPLOY_USER}"@"${DEPLOY_HOST}" "cd ${DEPLOY_DIR} && podman logs -f ${APP_NAME}"
     ;;
   *)
     usage

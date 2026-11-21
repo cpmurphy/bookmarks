@@ -8,7 +8,7 @@ and not too smooth.
 
 To run unit tests, use `rake`.
 
-To run system tests in a Docker container, use `bin/docker-test`.
+To run system tests in a container (Podman), use `bin/docker-test`.
 
 ## Deployment
 

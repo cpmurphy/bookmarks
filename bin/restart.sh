@@ -21,12 +21,9 @@ ssh "${DEPLOY_USER}"@"${DEPLOY_HOST}" \
 set -e
 set -x
 cd "${DEPLOY_DIR}"
-# stop any old "${APP_NAME}" container
-docker stop "${APP_NAME}" || true
-docker rm "${APP_NAME}" || true
-# now run the image using regular docker
+# run the new image, replacing any existing "${APP_NAME}" container
 # listens to port 3001 on the host
-docker run -d --name "${APP_NAME}" -p 127.0.0.1:3001:3000 \
+podman run -d --replace --name "${APP_NAME}" -p 127.0.0.1:3001:3000 \
   -e RACK_ENV=production \
   --restart=unless-stopped \
   --userns=keep-id:uid=1000,gid=1000 \
