@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Build the test image
-docker build -t bookmarks-test -f Dockerfile.test .
+podman build -t bookmarks-test -f Dockerfile.test .
 
 # Run the tests
-docker run --rm \
+podman run --rm \
   -e RAILS_ENV=test \
   bookmarks-test \
   bash -c "bin/rails db:test:prepare && bin/rails test:system"
